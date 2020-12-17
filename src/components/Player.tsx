@@ -58,7 +58,7 @@ export function Player(props: PlayerProps) {
     return (
         <mesh
             ref={mesh}
-            scale={[ 1,1,1 ]}
+            scale={dragging ? [1.1, 1.1, 1.1] : [ 1,1,1 ]}
             {...bind()}
         >
             <planeBufferGeometry attach="geometry" />
