@@ -16,10 +16,11 @@ interface BattleMapProps {
 }
 
 function BattleMap({ width = 25, height = 25 }: BattleMapProps) {
+    const theme = useStyletron()[1]
     return (
         <mesh position={[ 0, 0, -1 ]}>
             <planeBufferGeometry args={[ width, height, 1, 1 ]} />
-            <meshStandardMaterial color="#333333" />
+            <meshStandardMaterial color={theme.colors.backgroundAlt} />
         </mesh>
     );
 }
@@ -75,7 +76,8 @@ const tools = [ AvailableTools.NORMAL, AvailableTools.POINTER ];
 const improveResolution = false;
 
 export const Board = () => {
-    const [ _, theme ] = useStyletron();
+    const theme = useStyletron()[1];
+
     const [ players, setPlayers ] = useState<{ id: number, x: number, y: number, isDragging?: boolean }[]>([]);
     const [ mapSize, setMapSize ] = useState<{ width: number, height: number }>({ width: 20, height: 10 });
     const canvasRef = createRef<HTMLDivElement>();
