@@ -1,40 +1,54 @@
 import { BaseProvider, DarkTheme, LightTheme } from 'baseui';
-import React, { useEffect } from 'react';
+import React, { FC } from 'react';
 import { Client as Styletron } from 'styletron-engine-atomic';
 import { Provider as StyletronProvider } from 'styletron-react';
-import { Board } from './components/Board';
-import { Main } from './components/Main';
-import { connection } from './shared/connection';
+import { Board } from './modules/board/components/Board';
+import { Main } from './shared/components/Main';
+import { ToolContextProvider } from './modules/toolbox/contexts/ToolContext';
+import { CollaboratorBar } from './modules/collaborators/components/CollaboratorBar';
+import { UserPreferencesContextProvider } from './modules/preferences/contexts/UserPreferencesContext';
+import { useUserPreferences } from './modules/preferences/hooks/useUserPreferences';
+import { Toolbox } from './modules/toolbox/components/Toolbox';
+import { ShortcutHandler } from './shared/components/ShortcutHandler';
 
 const engine = new Styletron();
 
+const UserBaseProvider: FC = ({ children }) => {
+    const preferences = useUserPreferences();
+    let theme;
+
+    switch (preferences.theme) {
+        case 'auto':
+            theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? DarkTheme : LightTheme;
+            break;
+        case 'light':
+            theme = LightTheme;
+            break;
+        case 'dark':
+            theme = DarkTheme;
+            break;
+    }
+
+    return <BaseProvider theme={theme} children={children!!} />;
+};
+
 function App() {
-    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    useEffect(() => {
-        connection.emit('initial_data');
-    }, []);
-
     return (
         <StyletronProvider value={engine}>
-            <BaseProvider theme={prefersDarkMode ? DarkTheme : LightTheme}>
-                <div style={{ display: 'flex', height: '100%' }}>
-                    <Main>
-                        <Board />
-                        {/*<Dice />*/}
-                        {/*<Checkbox*/}
-                        {/*    checked={dark}*/}
-                        {/*    onChange={() => setDark(!dark)}*/}
-                        {/*    labelPlacement={LABEL_PLACEMENT.right}*/}
-                        {/*>*/}
-                        {/*    Dark Mode?*/}
-                        {/*</Checkbox>*/}
-                    </Main>
-                    {/*<Sidebar>*/}
-                    {/*<Messages />*/}
-                    {/*</Sidebar>*/}
-                </div>
-            </BaseProvider>
+            <UserPreferencesContextProvider>
+                <UserBaseProvider>
+                    <div style={{ display: 'flex', height: '100%' }}>
+                        <ToolContextProvider>
+                            <ShortcutHandler />
+                            <Main>
+                                <Board />
+                                <Toolbox />
+                                <CollaboratorBar />
+                            </Main>
+                        </ToolContextProvider>
+                    </div>
+                </UserBaseProvider>
+            </UserPreferencesContextProvider>
         </StyletronProvider>
     );
 }
