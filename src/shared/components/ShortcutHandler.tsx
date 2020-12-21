@@ -6,12 +6,16 @@ export function ShortcutHandler() {
     const { setTool } = useContext(ToolContext);
 
     const handler = (event: KeyboardEvent) => {
-        if (event.key === 'v') {
-            setTool(Tool.NORMAL);
-        }
-
-        if (event.key === 'p') {
-            setTool(Tool.POINTER);
+        switch (event.key) {
+            case 'v':
+                setTool(Tool.NORMAL);
+                break;
+            case 'p':
+                setTool(Tool.POINTER);
+                break;
+            case 'r':
+                setTool(Tool.RULER);
+                break;
         }
     };
 

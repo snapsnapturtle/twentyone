@@ -27,6 +27,9 @@ export const ToolContextProvider: FC = (props) => {
     }, {
         tool: Tool.POINTER,
         name: 'Pointer'
+    }, {
+        tool: Tool.RULER,
+        name: 'Ruler'
     } ];
 
     const context: IToolContext = {

@@ -1,11 +1,11 @@
 import { Button, SIZE } from 'baseui/button';
-import { ButtonGroup } from 'baseui/button-group';
-import { Checkbox } from 'baseui/checkbox';
-import { FormControl } from 'baseui/form-control';
-import { Input } from 'baseui/input';
 import { Modal, ModalBody, ModalButton, ModalFooter, ModalHeader } from 'baseui/modal';
-import React, { useContext, useState } from 'react';
+import { Tab, Tabs } from 'baseui/tabs-motion';
+import React, { ReactText, useContext, useState } from 'react';
+import { Preferences } from '../contexts/Preferences';
 import { UserPreferencesContext } from '../contexts/UserPreferencesContext';
+import { GeneralPreferences } from './GeneralPreferences';
+import { RulerPreferences } from './RulerPreferences';
 
 const SettingsIcon = () => (
     <svg viewBox="0 0 24 24" id="img__settings-24" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px">
@@ -18,48 +18,52 @@ const SettingsIcon = () => (
 
 
 export function UserPreferences() {
+    const [ activeKey, setActiveKey ] = useState<ReactText>(0);
     const [ isOpen, setIsOpen ] = useState<boolean>(false);
     const { preferences, setPreferences } = useContext(UserPreferencesContext);
-    const [ theme, setTheme ] = useState<'light' | 'dark' | 'auto'>(preferences.theme);
-    const [ displayName, setDisplayName ] = useState<string>(preferences.displayName);
-
-    const [ useHighResolution, setUseHighResolution ] = useState<boolean>(preferences.devicePixelRatio === window.devicePixelRatio);
+    const [ changedPreferences, setChangedPreferences ] = useState<Preferences>(preferences);
 
     const handleSavePreferences = () => {
-        setPreferences({
-            devicePixelRatio: useHighResolution ? window.devicePixelRatio : 1,
-            theme,
-            displayName
-        });
+        setPreferences(changedPreferences);
 
         setIsOpen(false);
     };
 
-    const availableThemes = [ 'light', 'dark', 'auto' ];
-
     return (
         <>
             <Button size={SIZE.compact} onClick={() => setIsOpen(true)} kind="secondary"><SettingsIcon /></Button>
-            <Modal onClose={() => setIsOpen(false)} isOpen={isOpen} unstable_ModalBackdropScroll={true}>
+            <Modal
+                onClose={() => setIsOpen(false)}
+                isOpen={isOpen}
+                unstable_ModalBackdropScroll={true}
+                overrides={{
+                    Dialog: {
+                        style: {
+                            width: '80vw',
+                            height: '80vh',
+                            display: 'flex',
+                            flexDirection: 'column'
+                        }
+                    }
+                }}
+            >
                 <ModalHeader>User Preferences</ModalHeader>
-                <ModalBody>
-                    <FormControl label="Appearance">
-                        <ButtonGroup selected={availableThemes.indexOf(theme)}>
-                            {availableThemes.map(it => <Button key={it} onClick={() => setTheme(it as any)}>{it.toUpperCase()}</Button>)}
-                        </ButtonGroup>
-                    </FormControl>
-                    <FormControl label="Display Name" caption="Your out-of-character name">
-                        <Input value={displayName} onChange={(e: any) => setDisplayName(e.target.value)} />
-                    </FormControl>
-                    <FormControl label="Render option">
-                        <Checkbox
-                            checked={useHighResolution}
-                            onChange={(e: any) => setUseHighResolution(e.target.checked)}
-                            disabled={window.devicePixelRatio === 1}
-                        >
-                            Use high resolution rendering
-                        </Checkbox>
-                    </FormControl>
+                <ModalBody style={{ flex: '1 1 0' }}>
+                    <Tabs
+                        activeKey={activeKey}
+                        onChange={({ activeKey }) => {
+                            setActiveKey(activeKey);
+                        }}
+                        activateOnFocus
+                    >
+                        <Tab title="General">
+                            <GeneralPreferences onPreferencesChange={setChangedPreferences} preferences={changedPreferences} />
+                        </Tab>
+                        <Tab title="Ruler">
+                            <RulerPreferences onPreferencesChange={setChangedPreferences} preferences={changedPreferences} />
+                        </Tab>
+                        <Tab title="Misc">TBD</Tab>
+                    </Tabs>
                 </ModalBody>
                 <ModalFooter>
                     <ModalButton kind="tertiary" onClick={() => setIsOpen(false)}>

@@ -4,8 +4,10 @@ import { useSpring } from 'react-spring';
 import { useFrame } from 'react-three-fiber';
 import { addV, useDrag } from 'react-use-gesture';
 import { Mesh } from 'three';
-import { useConvertPixelToCanvas } from '../hooks/useConvertPixelToCanvas';
 import { connection } from '../../../shared/connection';
+import { Tool } from '../../toolbox/enums/Tool';
+import { useActiveTool } from '../../toolbox/hooks/useActiveTool';
+import { useConvertPixelToCanvas } from '../hooks/useConvertPixelToCanvas';
 
 interface TokenProps {
     id: number;
@@ -14,6 +16,7 @@ interface TokenProps {
 }
 
 export function Token(props: TokenProps) {
+    const activeTool = useActiveTool();
     const staticTokenMesh = useRef<Mesh>();
     const draggableTokenMesh = useRef<Mesh>();
     const draggableTokenPosition = useRef<[ x: number, y: number ]>([ props.position[ 0 ], props.position[ 1 ] ]);
@@ -43,7 +46,7 @@ export function Token(props: TokenProps) {
                 ...newPosition
             });
         }
-    }, { filterTaps: true });
+    }, { filterTaps: true, enabled: activeTool === Tool.NORMAL });
 
     useEffect(() => {
         set({ x: props.position[ 0 ], y: props.position[ 1 ] });

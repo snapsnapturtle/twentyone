@@ -3,12 +3,12 @@ import React, { FC } from 'react';
 import { Client as Styletron } from 'styletron-engine-atomic';
 import { Provider as StyletronProvider } from 'styletron-react';
 import { Board } from './modules/board/components/Board';
-import { Main } from './shared/components/Main';
-import { ToolContextProvider } from './modules/toolbox/contexts/ToolContext';
 import { CollaboratorBar } from './modules/collaborators/components/CollaboratorBar';
 import { UserPreferencesContextProvider } from './modules/preferences/contexts/UserPreferencesContext';
 import { useUserPreferences } from './modules/preferences/hooks/useUserPreferences';
 import { Toolbox } from './modules/toolbox/components/Toolbox';
+import { ToolContextProvider } from './modules/toolbox/contexts/ToolContext';
+import { Main } from './shared/components/Main';
 import { ShortcutHandler } from './shared/components/ShortcutHandler';
 
 const engine = new Styletron();

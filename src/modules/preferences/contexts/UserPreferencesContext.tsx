@@ -1,15 +1,16 @@
-import { createContext, FC, useEffect, useState } from 'react';
+import { createContext, Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { Preferences } from './Preferences';
 
 const defaultPreferences: Preferences = {
     theme: 'auto',
     displayName: '',
-    devicePixelRatio: 1
+    devicePixelRatio: 1,
+    snapRulerToCenter: true
 };
 
 interface IUserPreferencesContext {
     preferences: Preferences;
-    setPreferences: (preferences: Partial<Preferences>) => void;
+    setPreferences: Dispatch<SetStateAction<Preferences>>;
 }
 
 export const UserPreferencesContext = createContext<IUserPreferencesContext>({
@@ -39,9 +40,7 @@ export const UserPreferencesContextProvider: FC = (props) => {
 
     const context: IUserPreferencesContext = {
         preferences,
-        setPreferences: (updatedPreferences => {
-            setPreferences(current => ({ ...current, ...updatedPreferences }));
-        })
+        setPreferences
     };
 
     return <UserPreferencesContext.Provider {...props} value={context} />;
