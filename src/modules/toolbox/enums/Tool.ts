@@ -1,5 +1,5 @@
 export enum Tool {
     NORMAL,
-    POINTER,
-    RULER
+    RULER_CIRCLE,
+    RULER_LINE
 }

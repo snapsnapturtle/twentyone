@@ -1,15 +1,15 @@
 import React from 'react';
 import { useUpdate } from 'react-three-fiber';
-import { BufferGeometry, Vector3 } from 'three';
+import { BufferGeometry, Color, Vector3 } from 'three';
+import { useColors } from '../hooks/useColors';
 
 interface SquareGridMapProps {
     width: number;
     height: number;
-    color: string;
-    backgroundColor: string;
 }
 
-export function SquareGridMap({ width, height, color, backgroundColor }: SquareGridMapProps) {
+export function SquareGridMap({ width, height }: SquareGridMapProps) {
+    const colors = useColors();
     const halfHeight = Math.ceil(height / 2) - .5;
     const halfWidth = Math.ceil(width / 2) - .5;
 
@@ -33,11 +33,11 @@ export function SquareGridMap({ width, height, color, backgroundColor }: SquareG
         <>
             <mesh position={[ 0, 0, -1 ]}>
                 <planeBufferGeometry args={[ width, height, 1, 1 ]} />
-                <meshStandardMaterial color={backgroundColor} />
+                <meshBasicMaterial color={new Color(colors.backgroundPrimary)} />
             </mesh>
             <lineSegments position={[ 0, 0, -1 ]}>
                 <bufferGeometry attach="geometry" ref={geometryRef} />
-                <meshBasicMaterial color={color} />
+                <meshBasicMaterial color={new Color(colors.contentStateDisabled)} />
             </lineSegments>
         </>
     );

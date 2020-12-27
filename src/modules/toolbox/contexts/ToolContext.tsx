@@ -25,11 +25,11 @@ export const ToolContextProvider: FC = (props) => {
         tool: Tool.NORMAL,
         name: 'Normal'
     }, {
-        tool: Tool.POINTER,
-        name: 'Pointer'
-    }, {
-        tool: Tool.RULER,
+        tool: Tool.RULER_LINE,
         name: 'Ruler'
+    }, {
+        tool: Tool.RULER_CIRCLE,
+        name: 'Ruler (Circle)'
     } ];
 
     const context: IToolContext = {

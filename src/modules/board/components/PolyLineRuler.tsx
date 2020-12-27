@@ -1,17 +1,15 @@
 import { Html } from '@react-three/drei';
-import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { config, useSpring } from 'react-spring';
 import { useFrame, useThree, useUpdate } from 'react-three-fiber';
-import { BufferGeometry, Vector3 } from 'three';
+import { BufferGeometry, Color, Vector3 } from 'three';
+import { calculateDistance } from '../../../util/calculateDistance';
 import { useUserPreferences } from '../../preferences/hooks/useUserPreferences';
+import { useColors } from '../hooks/useColors';
 import { useRelativeMousePosition } from '../hooks/useRelativeMousePosition';
 
 const LEFT_MOUSE_BUTTON = 0;
 const RIGHT_MOUSE_BUTTON = 2;
-
-interface RulerProps {
-    mousePosition: MutableRefObject<[ x: number, y: number ]>
-}
 
 function adjustVectorToPreference(vector: [ x: number, y: number ], snapToCenter: boolean): [ x: number, y: number ] {
     if (snapToCenter) {
@@ -21,7 +19,7 @@ function adjustVectorToPreference(vector: [ x: number, y: number ], snapToCenter
     }
 }
 
-export function PolyLineRuler(props: RulerProps) {
+export function PolyLineRuler() {
     const htmlRef = useRef<any>();
     const { gl: { domElement } } = useThree();
     const distanceRef = useRef<HTMLDivElement>(null);
@@ -30,11 +28,12 @@ export function PolyLineRuler(props: RulerProps) {
     const [ lineVectors, setLineVectors ] = useState<[ x: number, y: number ][]>([]);
     const relativeMousePosition = useRelativeMousePosition();
     const preferences = useUserPreferences();
+    const colors = useColors();
 
     const [ { mouseX, mouseY }, set ] = useSpring<{ mouseX: number, mouseY: number }>(() => ({
         mouseX: 0,
         mouseY: 0,
-        config: { ...config.stiff, clamp: true }
+        config: config.stiff
     }));
 
     const geometryRef = useUpdate<BufferGeometry>(geometry => {
@@ -77,18 +76,16 @@ export function PolyLineRuler(props: RulerProps) {
 
                 const totalDistance = distancePoints.reduce((totalDistance: number, currentPosition, index, allPositions): number => {
                     if (index > 0) {
-                        const dx = Math.abs(allPositions[ index - 1 ][ 0 ] - currentPosition[ 0 ]);
-                        const dy = Math.abs(allPositions[ index - 1 ][ 1 ] - currentPosition[ 1 ]);
-
-                        return totalDistance + Math.max(dx, dy);
+                        return totalDistance + calculateDistance(allPositions[ index - 1 ], currentPosition);
                     }
 
                     return 0;
                 }, 0);
 
                 if (totalDistance > 0) {
+                    const displayDistance = Math.round(totalDistance);
                     currentDistanceElement.style.display = 'block';
-                    currentDistanceElement.innerHTML = `${totalDistance * 5}&nbsp;ft\n${totalDistance}&nbsp;sq`;
+                    currentDistanceElement.innerHTML = `${displayDistance * 5}&nbsp;ft\n${displayDistance}&nbsp;sq`;
                 }
             }
         } else {
@@ -149,14 +146,13 @@ export function PolyLineRuler(props: RulerProps) {
                 <Html style={{ pointerEvents: 'none' }}>
                     <div
                         style={{
-                            color: 'white',
-                            background: 'rgba(203,203,203, 0.5)',
-                            fontFamily: 'sans-serif',
-                            fontWeight: 600,
-                            fontSize: '1em',
+                            color: colors.contentInversePrimary,
+                            background: colors.backgroundInversePrimary,
+                            fontWeight: 400,
+                            fontFamily: 'monospace',
                             transform: 'translate(-50%, -50%)',
-                            padding: '0.125em 0.5em',
-                            borderRadius: '0.25em',
+                            padding: '0.25em 0.5em',
+                            borderRadius: '0.125em',
                             textAlign: 'center',
                             pointerEvents: 'none'
                         }} ref={distanceRef}
@@ -164,14 +160,14 @@ export function PolyLineRuler(props: RulerProps) {
                 </Html>
             </mesh>
             {lineVectors.map((position, index) => (
-                <mesh scale={[ 0.05, 0.05, 0.05 ]} position={[ position[ 0 ], position[ 1 ], 1 ]} key={index}>
-                    <circleBufferGeometry args={[ 1, 360 ]} />
-                    <meshBasicMaterial color="red" />
+                <mesh scale={[ 0.2, 0.2, 0.2 ]} position={[ position[ 0 ], position[ 1 ], 1 ]} key={index}>
+                    <circleBufferGeometry args={[ 0.5, 360 ]} />
+                    <meshBasicMaterial color={new Color(colors.backgroundAccent)} />
                 </mesh>
             ))}
             <line>
                 <bufferGeometry attach="geometry" ref={geometryRef} />
-                <lineBasicMaterial color="red" linewidth={20} />
+                <lineBasicMaterial color={new Color(colors.backgroundAccent)} />
             </line>
         </>
     );

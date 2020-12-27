@@ -1,6 +1,5 @@
 import { Checkbox } from 'baseui/checkbox';
 import { FormControl } from 'baseui/form-control';
-import { Input } from 'baseui/input';
 import React, { Dispatch, SetStateAction } from 'react';
 import { Preferences } from '../contexts/Preferences';
 
@@ -20,12 +19,6 @@ export function RulerPreferences({ onPreferencesChange, preferences }: RulerPref
                     Snap to center
                 </Checkbox>
 
-            </FormControl>
-            <FormControl label="Distance">
-                <Input placeholder="tile size = 1   " />
-            </FormControl>
-            <FormControl>
-                <Input placeholder="feet" />
             </FormControl>
         </>
     );

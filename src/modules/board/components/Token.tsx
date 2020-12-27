@@ -72,11 +72,11 @@ export function Token(props: TokenProps) {
         <>
             <mesh ref={draggableTokenMesh} {...bind()}>
                 <planeBufferGeometry attach="geometry" />
-                <meshStandardMaterial map={texture} attach="material" transparent opacity={0.5} />
+                <meshBasicMaterial map={texture} attach="material" transparent opacity={0.5} />
             </mesh>
             <mesh ref={staticTokenMesh} position={[ props.position[ 0 ], props.position[ 1 ], -1 ]}>
                 <planeBufferGeometry attach="geometry" />
-                <meshStandardMaterial map={texture} attach="material" transparent />
+                <meshBasicMaterial map={texture} attach="material" transparent />
             </mesh>
         </>
     );

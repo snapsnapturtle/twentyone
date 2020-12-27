@@ -1,8 +1,11 @@
 import { BaseProvider, DarkTheme, LightTheme } from 'baseui';
-import React, { FC } from 'react';
+import { Check } from 'baseui/icon';
+import { DURATION, SnackbarProvider, useSnackbar } from 'baseui/snackbar';
+import React, { FC, useEffect } from 'react';
 import { Client as Styletron } from 'styletron-engine-atomic';
 import { Provider as StyletronProvider } from 'styletron-react';
 import { Board } from './modules/board/components/Board';
+import { ColorsContextProvider } from './modules/board/context/ColorsContext';
 import { CollaboratorBar } from './modules/collaborators/components/CollaboratorBar';
 import { UserPreferencesContextProvider } from './modules/preferences/contexts/UserPreferencesContext';
 import { useUserPreferences } from './modules/preferences/hooks/useUserPreferences';
@@ -10,6 +13,7 @@ import { Toolbox } from './modules/toolbox/components/Toolbox';
 import { ToolContextProvider } from './modules/toolbox/contexts/ToolContext';
 import { Main } from './shared/components/Main';
 import { ShortcutHandler } from './shared/components/ShortcutHandler';
+import { connection } from './shared/connection';
 
 const engine = new Styletron();
 
@@ -32,21 +36,43 @@ const UserBaseProvider: FC = ({ children }) => {
     return <BaseProvider theme={theme} children={children!!} />;
 };
 
+function ConnectionStatus() {
+    const { enqueue, dequeue } = useSnackbar();
+
+    useEffect(() => {
+        connection.io.on('error', () => {
+            enqueue({ message: 'Reconnecting to server...', progress: true }, DURATION.infinite);
+        });
+
+        connection.io.on('reconnect', () => {
+            dequeue()
+            enqueue({ message: 'Connection established', startEnhancer: ({ size }) => <Check size={size} /> });
+        });
+    }, [dequeue, enqueue]);
+
+    return null;
+}
+
 function App() {
     return (
         <StyletronProvider value={engine}>
             <UserPreferencesContextProvider>
                 <UserBaseProvider>
-                    <div style={{ display: 'flex', height: '100%' }}>
-                        <ToolContextProvider>
-                            <ShortcutHandler />
-                            <Main>
-                                <Board />
-                                <Toolbox />
-                                <CollaboratorBar />
-                            </Main>
-                        </ToolContextProvider>
-                    </div>
+                    <SnackbarProvider>
+                        <ConnectionStatus />
+                        <div style={{ display: 'flex', height: '100%' }}>
+                            <ToolContextProvider>
+                                <ShortcutHandler />
+                                <Main>
+                                    <ColorsContextProvider>
+                                        <Board />
+                                    </ColorsContextProvider>
+                                    <Toolbox />
+                                    <CollaboratorBar />
+                                </Main>
+                            </ToolContextProvider>
+                        </div>
+                    </SnackbarProvider>
                 </UserBaseProvider>
             </UserPreferencesContextProvider>
         </StyletronProvider>

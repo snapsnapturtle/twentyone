@@ -8,7 +8,7 @@ export const Main: FC = (props) => {
         <div
             {...props}
             className={css({
-                background: theme.colors.background,
+                background: theme.colors.backgroundPrimary,
                 width: '100%',
                 boxSizing: 'border-box',
                 height: '100vh'

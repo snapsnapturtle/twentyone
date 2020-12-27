@@ -1,9 +1,6 @@
 import { io } from 'socket.io-client';
 
 export const connection = io('http://localhost:4000', {
-    transports: [ 'websocket' ]
+    transports: [ 'websocket' ],
+    reconnectionAttempts: 3
 });
-
-if(!connection) {
-    console.log('oh no')
-}
