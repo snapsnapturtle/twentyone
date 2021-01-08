@@ -2,7 +2,8 @@ import { Html } from '@react-three/drei';
 import React, { useEffect, useRef, useState } from 'react';
 import { config, useSpring } from 'react-spring';
 import { useFrame, useThree, useUpdate } from 'react-three-fiber';
-import { BufferGeometry, Color, Vector3 } from 'three';
+import { BufferGeometry, Color, Mesh, Vector3 } from 'three';
+import { MeshLine, MeshLineMaterial } from '../../../types/Three.Meshline';
 import { calculateDistance } from '../../../util/calculateDistance';
 import { useUserPreferences } from '../../preferences/hooks/useUserPreferences';
 import { useColors } from '../hooks/useColors';
@@ -29,6 +30,23 @@ export function PolyLineRuler() {
     const relativeMousePosition = useRelativeMousePosition();
     const preferences = useUserPreferences();
     const colors = useColors();
+    const lineGeometry = useUpdate<Mesh>(mesh => {
+        const a = new MeshLine();
+        const points: number[] = [];
+
+        lineVectors.forEach((v) => {
+            points.push(v[ 0 ], v[ 1 ], 1);
+            points.push(v[ 0 ], v[ 1 ], 1);
+        });
+
+        a.setPoints(points);
+
+        mesh.geometry = a;
+        mesh.material = new MeshLineMaterial({
+            color: new Color(colors.backgroundAccent),
+            lineWidth: 0.1
+        });
+    }, [ lineVectors ]);
 
     const [ { mouseX, mouseY }, set ] = useSpring<{ mouseX: number, mouseY: number }>(() => ({
         mouseX: 0,
@@ -159,6 +177,9 @@ export function PolyLineRuler() {
                     />
                 </Html>
             </mesh>
+
+            <mesh ref={lineGeometry} />
+
             {lineVectors.map((position, index) => (
                 <mesh scale={[ 0.2, 0.2, 0.2 ]} position={[ position[ 0 ], position[ 1 ], 1 ]} key={index}>
                     <circleBufferGeometry args={[ 0.5, 360 ]} />

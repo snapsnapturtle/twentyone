@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
+import { extend } from 'react-three-fiber';
+import { MeshLine, MeshLineMaterial } from './types/Three.Meshline';
+
+extend({ MeshLine, MeshLineMaterial })
 
 ReactDOM.render(
   <React.StrictMode>

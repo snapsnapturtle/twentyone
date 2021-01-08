@@ -31,9 +31,9 @@ export function SquareGridMap({ width, height }: SquareGridMapProps) {
 
     return (
         <>
-            <mesh position={[ 0, 0, -1 ]}>
-                <planeBufferGeometry args={[ width, height, 1, 1 ]} />
-                <meshBasicMaterial color={new Color(colors.backgroundPrimary)} />
+            <mesh position={[ 0, 0, -1 ]} receiveShadow={true}>
+                <planeBufferGeometry args={[ width, height ]} />
+                <meshStandardMaterial color={new Color(colors.backgroundPrimary)} />
             </mesh>
             <lineSegments position={[ 0, 0, -1 ]}>
                 <bufferGeometry attach="geometry" ref={geometryRef} />

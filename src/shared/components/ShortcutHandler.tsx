@@ -13,6 +13,9 @@ export function ShortcutHandler() {
             case 'r':
                 setTool(Tool.RULER_LINE);
                 break;
+            case 'c':
+                setTool(Tool.RULER_CIRCLE);
+                break;
         }
     };
 

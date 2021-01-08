@@ -2,6 +2,7 @@ import { useStyletron } from 'baseui';
 import { Avatar } from 'baseui/avatar';
 import React, { useEffect, useState } from 'react';
 import { connection } from '../../../shared/connection';
+import { ShowOthersToggle } from './ShowOthersToggle';
 
 interface Collaborator {
     id: string;
@@ -38,6 +39,7 @@ export function CollaboratorBar() {
                 background: theme.colors.backgroundTertiary
             }}
         >
+            <ShowOthersToggle />
             {collaborators.map(it => (
                 <Avatar
                     key={it.id}
