@@ -2,7 +2,7 @@ import CANNON, { Vec3, World } from 'cannon';
 import React, { useEffect, useRef } from 'react';
 import { useFrame, useResource, useThree } from 'react-three-fiber';
 import { PointLight } from 'three';
-import { DiceD10, DiceD12, DiceD20, DiceD4, DiceD6, DiceD8, DiceManager, DiceObject } from './Dice2';
+import { DiceD10, DiceD12, DiceD20, DiceD4, DiceD6, DiceD8, DiceManager, DiceObject } from './DiceLibrary';
 
 export function DiceSix() {
     const { scene } = useThree();

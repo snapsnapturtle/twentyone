@@ -312,7 +312,7 @@ export class DiceObject {
 
         let vectors = new Array(this.vertices.length);
         for (let i = 0; i < this.vertices.length; ++i) {
-            vectors[i] = (new THREE.Vector3).fromArray(this.vertices[i]).normalize();
+            vectors[i] = (new THREE.Vector3()).fromArray(this.vertices[i]).normalize();
         }
 
         let chamferGeometry = this.getChamferGeometry(vectors, this.faces, this.chamfer);

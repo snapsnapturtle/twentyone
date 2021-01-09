@@ -1,10 +1,8 @@
-import { Sky, Stars, Stats, useContextBridge } from '@react-three/drei';
-import React, { createRef, Suspense, useEffect, useRef, useState } from 'react';
+import { Stats, useContextBridge } from '@react-three/drei';
+import React, { createRef, Suspense, useEffect, useState } from 'react';
 import { Canvas } from 'react-three-fiber';
-import { PointLight } from 'three';
 import { CanvasLoading } from '../../../shared/components/CanvasLoading';
 import { connection } from '../../../shared/connection';
-import { CursorPositions } from '../../collaborators/components/CursorPositions';
 import { DiceSix } from '../../dice/DiceSix';
 import { UserPreferencesContext } from '../../preferences/contexts/UserPreferencesContext';
 import { useUserPreferences } from '../../preferences/hooks/useUserPreferences';
@@ -41,11 +39,11 @@ export const Board = () => {
         <div ref={canvasRef} style={{ height: '100%' }}>
             <Canvas
                 concurrent
-                orthographic={false}
+                orthographic={true}
                 shadowMap={true}
                 pixelRatio={userPreferences.devicePixelRatio}
                 colorManagement={false}
-                camera={{ zoom: 1, up: [ 0, 0, 1 ], far: 10000, near: 0.1 }}
+                camera={{ zoom: 60, up: [ 0, 0, 1 ], far: 10000, near: 0.1 }}
             >
                 <ContextBridge>
                     <Suspense fallback={<CanvasLoading />}>
