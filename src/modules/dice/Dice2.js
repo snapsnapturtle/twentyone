@@ -9,15 +9,15 @@ class DiceManagerClass {
     setWorld(world) {
         this.world = world;
 
-        this.diceBodyMaterial = new CANNON.Material();
-        this.floorBodyMaterial = new CANNON.Material();
-        this.barrierBodyMaterial = new CANNON.Material();
+        this.diceBodyMaterial = new CANNON.Material('dice');
+        this.floorBodyMaterial = new CANNON.Material('floor');
+        this.barrierBodyMaterial = new CANNON.Material('barrier');
 
         world.addContactMaterial(
-            new CANNON.ContactMaterial(this.floorBodyMaterial, this.diceBodyMaterial, { friction: 0.01, restitution: 0.5 })
+            new CANNON.ContactMaterial(this.floorBodyMaterial, this.diceBodyMaterial, { friction: 0, restitution: 0.5 })
         );
         world.addContactMaterial(
-            new CANNON.ContactMaterial(this.barrierBodyMaterial, this.diceBodyMaterial, { friction: 0, restitution: 1.0 })
+            new CANNON.ContactMaterial(this.barrierBodyMaterial, this.diceBodyMaterial, { friction: 0, restitution: 1.0, contactEquationRelaxation: 100 })
         );
         world.addContactMaterial(
             new CANNON.ContactMaterial(this.diceBodyMaterial, this.diceBodyMaterial, { friction: 0, restitution: 0.5 })
@@ -82,7 +82,7 @@ class DiceManagerClass {
     }
 }
 
-class DiceObject {
+export class DiceObject {
     /**
      * @constructor
      * @param {object} options
@@ -104,8 +104,8 @@ class DiceObject {
         this.materialOptions = {
             specular: 0x172022,
             color: 0xf0f0f0,
-            shininess: 40,
-            shading: THREE.FlatShading,
+            shininess: 20,
+            flatShading: true
         };
         this.labelColor = options.fontColor;
         this.diceColor = options.backColor;
@@ -157,7 +157,7 @@ class DiceObject {
     }
 
     getUpsideValue() {
-        let vector = new THREE.Vector3(0, this.invertUpside ? -1 : 1);
+        let vector = new THREE.Vector3(0, 0, this.invertUpside ? -1 : 1);
         let closest_face;
         let closest_angle = Math.PI * 2;
         for (let i = 0; i < this.object.geometry.faces.length; ++i) {
