@@ -128,7 +128,13 @@ export function DiceSix() {
     }, [ scene ]);
 
     useFrame(() => {
-        DiceManager.world.step(1.0 / 60.0);
+        if (DiceManager.throwRunning) { // run simulation
+            while (DiceManager.throwRunning) {
+                DiceManager.world.step(1.0 / 60.0);
+            }
+        } else {
+            DiceManager.world.step(1.0 / 60.0);
+        }
         diceRef.current?.updateMeshFromBody();
 
         diceRefs.current.forEach(it => it.updateMeshFromBody());
