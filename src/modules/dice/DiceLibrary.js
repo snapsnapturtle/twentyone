@@ -73,9 +73,7 @@ class DiceManagerClass {
                 }
 
                 this.throwRunning = false;
-            } else {
-                DiceManager.world.step(DiceManager.world.dt);
-            }
+            } 
         };
 
         this.world.addEventListener('postStep', check);
