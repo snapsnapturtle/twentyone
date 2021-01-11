@@ -63,7 +63,6 @@ class DiceManagerClass {
             }
 
             if (allStable) {
-                console.log("all stable");
                 DiceManager.world.removeEventListener('postStep', check);
 
                 for (let i = 0; i < diceValues.length; i++) {
@@ -205,6 +204,19 @@ export class DiceObject {
         }
 
         this.object.geometry = geometry;
+
+        if (this.values === 4) {
+            // to shift faces on a d4, we need to alter faceTexts and recreate the textures from it
+            let num = toValue - fromValue;
+            if (num < 0) num += 4;
+            this.faceTexts = [
+                [[], [0, 0, 0], [2, 4, 3], [1, 3, 4], [2, 1, 4], [1, 2, 3]],
+                [[], [0, 0, 0], [2, 3, 4], [3, 1, 4], [2, 4, 1], [3, 2, 1]],
+                [[], [0, 0, 0], [4, 3, 2], [3, 4, 1], [4, 2, 1], [3, 1, 2]],
+                [[], [0, 0, 0], [4, 2, 3], [1, 4, 3], [4, 1, 2], [1, 3, 2]]
+            ][num];
+            this.object.material = this.getMaterials();
+        }
     }
 
     getChamferGeometry(vectors, faces, chamfer) {
