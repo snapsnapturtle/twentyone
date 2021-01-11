@@ -337,15 +337,17 @@ export class DiceObject {
     }
 
     createTextTexture(text, color, backColor) {
-        let canvas = document.createElement("canvas");
-        let context = canvas.getContext("2d");
-        let ts = this.calculateTextureSize(this.size / 2 + this.size * this.textMargin) * 2;
-        canvas.width = canvas.height = ts;
-        context.font = ts / (1 + 2 * this.textMargin) + "pt Arial";
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        const textureSize = this.calculateTextureSize(this.size / 2 + this.size * this.textMargin) * 2;
+        const approximateFontSize = textureSize / (1 + 2 * this.textMargin);
+
+        canvas.width = canvas.height = textureSize;
+        context.font = `${approximateFontSize}pt Arial`;
         context.fillStyle = backColor;
         context.fillRect(0, 0, canvas.width, canvas.height);
-        context.textAlign = "center";
-        context.textBaseline = "middle";
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
         context.fillStyle = color;
         context.fillText(text, canvas.width / 2, canvas.height / 2);
         let texture = new THREE.Texture(canvas);
@@ -462,7 +464,7 @@ export class DiceD6 extends DiceObject {
         this.faceTexts = [' ', '0', '1', '2', '3', '4', '5', '6', '7', '8',
             '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'];
         this.textMargin = 1.0;
-        this.mass = 300;
+        this.mass = 400;
         this.inertia = 13;
 
         this.create();
@@ -545,7 +547,7 @@ export class DiceD12 extends DiceObject {
         this.faceTexts = [' ', '0', '1', '2', '3', '4', '5', '6', '7', '8',
             '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'];
         this.textMargin = 1.0;
-        this.mass = 350;
+        this.mass = 600;
         this.inertia = 8;
 
         this.create();
@@ -573,7 +575,7 @@ export class DiceD20 extends DiceObject {
         this.faceTexts = [' ', '0', '1', '2', '3', '4', '5', '6', '7', '8',
             '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'];
         this.textMargin = 1.0;
-        this.mass = 400;
+        this.mass = 500;
         this.inertia = 6;
 
         this.create();
