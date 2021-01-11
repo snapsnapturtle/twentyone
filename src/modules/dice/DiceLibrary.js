@@ -17,7 +17,7 @@ class DiceManagerClass {
             new CANNON.ContactMaterial(this.floorBodyMaterial, this.diceBodyMaterial, { friction: 0, restitution: 0.5 })
         );
         world.addContactMaterial(
-            new CANNON.ContactMaterial(this.barrierBodyMaterial, this.diceBodyMaterial, { friction: 0, restitution: 1.0, contactEquationRelaxation: 100 })
+            new CANNON.ContactMaterial(this.barrierBodyMaterial, this.diceBodyMaterial, { friction: 0, restitution: 0 })
         );
         world.addContactMaterial(
             new CANNON.ContactMaterial(this.diceBodyMaterial, this.diceBodyMaterial, { friction: 0, restitution: 0.5 })
