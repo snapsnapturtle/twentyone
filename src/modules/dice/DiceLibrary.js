@@ -63,6 +63,7 @@ class DiceManagerClass {
             }
 
             if (allStable) {
+                console.log('all stable')
                 DiceManager.world.removeEventListener('postStep', check);
 
                 for (let i = 0; i < diceValues.length; i++) {
@@ -101,8 +102,8 @@ export class DiceObject {
         this.materialOptions = {
             specular: 0x172022,
             color: 0xf0f0f0,
-            shininess: 20,
-            flatShading: true
+            shininess: 45,
+            flatShading: true,
         };
         this.labelColor = options.fontColor;
         this.diceColor = options.backColor;

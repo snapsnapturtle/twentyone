@@ -14,16 +14,17 @@ export function DiceSix() {
         const world = new World();
         world.addBody(new CANNON.Body({ mass: 0, shape: new CANNON.Plane(), material: DiceManager.floorBodyMaterial, position: new Vec3(0, 0, -1) }));
 
-        let wallTop = new CANNON.Body({ mass: 0, shape: new CANNON.Plane(), material: DiceManager.barrierBodyMaterial, position: new Vec3(0, 5, 0) });
+        let wallTop = new CANNON.Body({ mass: 0, shape: new CANNON.Plane(), material: DiceManager.barrierBodyMaterial, position: new Vec3(0, 6.5, 0) });
         wallTop.quaternion.setFromAxisAngle(new Vec3(1, 0, 0), Math.PI / 2);
+        wallTop.force.set(2, 0, 0);
 
-        let wallLeft = new CANNON.Body({ mass: 0, shape: new CANNON.Plane(), material: DiceManager.barrierBodyMaterial, position: new Vec3(-5, 0, 0) });
+        let wallLeft = new CANNON.Body({ mass: 0, shape: new CANNON.Plane(), material: DiceManager.barrierBodyMaterial, position: new Vec3(-12.5, 0, 0) });
         wallLeft.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), Math.PI / 2);
 
-        let wallRight = new CANNON.Body({ mass: 0, shape: new CANNON.Plane(), material: DiceManager.barrierBodyMaterial, position: new Vec3(5, 0, 0) });
+        let wallRight = new CANNON.Body({ mass: 0, shape: new CANNON.Plane(), material: DiceManager.barrierBodyMaterial, position: new Vec3(12.5, 0, 0) });
         wallRight.quaternion.setFromAxisAngle(new Vec3(0, -1, 0), Math.PI / 2);
 
-        let wallBottom = new CANNON.Body({ mass: 0, shape: new CANNON.Plane(), material: DiceManager.barrierBodyMaterial, position: new Vec3(0, -5, 0) });
+        let wallBottom = new CANNON.Body({ mass: 0, shape: new CANNON.Plane(), material: DiceManager.barrierBodyMaterial, position: new Vec3(0, -6.5, 0) });
         wallBottom.quaternion.setFromAxisAngle(new Vec3(-1, 0, 0), Math.PI / 2);
 
         world.addBody(wallTop);
@@ -32,7 +33,7 @@ export function DiceSix() {
         world.addBody(wallBottom);
 
         DiceManager.setWorld(world);
-        DiceManager.world.gravity.set(0, 0, -9.82);
+        DiceManager.world.gravity.set(0, 0, -9.82 * 2);
         DiceManager.world.broadphase = new CANNON.NaiveBroadphase();
         DiceManager.world.solver.iterations = 16;
     }, [ scene ]);
@@ -84,24 +85,23 @@ export function DiceSix() {
             const die = getDiceObject(dieType, faceColor, dieColor);
             die.getObject()!!.position.x = Math.random() * 6 - 3;
             die.getObject()!!.position.y = Math.random() * 6 - 3;
-            die.getObject()!!.position.z = Math.random() * 2 + 2;
+            die.getObject()!!.position.z = 4;
 
             die.updateBodyFromMesh();
 
             // @ts-ignore
             die.getObject()!!.body.velocity.set(
-                Math.random() * 8 - 4,
-                Math.random() * 8 - 4,
-                Math.random()
+                Math.random() * 30 - 15,
+                Math.random() * 30 - 15,
+                0
             );
 
             // @ts-ignore
             die.getObject()!!.body.angularVelocity.set(
-                Math.random() * 8 - 4,
-                Math.random() * 8 - 4,
-                Math.random() * 8
+                Math.random() * 20 - 10,
+                Math.random() * 20 - 10,
+                Math.random() * 20 - 10
             );
-
 
             // @ts-ignore
             scene.add(die.getObject());
@@ -110,20 +110,12 @@ export function DiceSix() {
             return die;
         }
 
-        const dieOne = roll('d6', '#332503', '#fcB711');
-        const dieTwo = roll('d6', '#331807', '#f37021');
-        const dieThree = roll('d6', '#330013', '#cc004c');
-        const dieFour = roll('d6', '#1e1d33', '#6460aa');
-        const dieFive = roll('d6', '#002233', '#0089d0');
-        const dieSix = roll('d6', '#043316', '#0db14b');
+        const dieOne = roll('d20', '#d7be69', '#010328');
+        const dieTwo = roll('d20', '#ffdaea', '#940949');
 
         DiceManager.prepareValues([
             { dice: dieOne, value: 1 },
-            { dice: dieTwo, value: 2 },
-            { dice: dieThree, value: 3 },
-            { dice: dieFour, value: 4 },
-            { dice: dieFive, value: 5 },
-            { dice: dieSix, value: 6 }
+            { dice: dieTwo, value: 20 }
         ]);
     }, [ scene ]);
 
@@ -142,7 +134,7 @@ export function DiceSix() {
 
     return (
         <>
-            <spotLight position={[ 0, 0, 25 ]} intensity={0.75} castShadow={true} ref={ref} />
+            <spotLight position={[ 0, 0, 30 ]} intensity={0.75} castShadow={true} ref={ref} />
             {/*{ref.current && <cameraHelper args={[ ref.current.shadow.camera ]} />}*/}
         </>
     );
