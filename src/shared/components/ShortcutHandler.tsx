@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
-import { ToolContext } from '../../modules/toolbox/contexts/ToolContext';
-import { Tool } from '../../modules/toolbox/enums/Tool';
+import { ToolContext } from '../../modules/game/toolbox/contexts/ToolContext';
+import { Tool } from '../../modules/game/toolbox/enums/Tool';
 
 export function ShortcutHandler() {
     const { setTool } = useContext(ToolContext);

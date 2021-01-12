@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { config, useSpring } from 'react-spring';
 import { useFrame, useResource, useThree } from 'react-three-fiber';
 import { Mesh } from 'three';
-import { connection } from '../../../shared/connection';
+import { connection } from '../../../../shared/connection';
 import { useRelativeMousePosition } from '../../board/hooks/useRelativeMousePosition';
 
 function useMousePosition(handler: (mouseVector: [ x: number, y: number ]) => void) {

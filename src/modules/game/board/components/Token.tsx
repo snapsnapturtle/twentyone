@@ -4,7 +4,7 @@ import { useSpring } from 'react-spring';
 import { useFrame } from 'react-three-fiber';
 import { addV, useDrag } from 'react-use-gesture';
 import { Mesh } from 'three';
-import { connection } from '../../../shared/connection';
+import { connection } from '../../../../shared/connection';
 import { Tool } from '../../toolbox/enums/Tool';
 import { useActiveTool } from '../../toolbox/hooks/useActiveTool';
 import { useConvertPixelToCanvas } from '../hooks/useConvertPixelToCanvas';

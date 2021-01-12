@@ -3,7 +3,7 @@ import { Button } from 'baseui/button';
 import { PLACEMENT, StatefulPopover, TRIGGER_TYPE } from 'baseui/popover';
 import React, { FC, useContext } from 'react';
 import { TokenCreator } from '../../board/components/TokenCreator';
-import { UserPreferences } from '../../preferences/components/UserPreferences';
+import { UserPreferences } from '../../../preferences/components/UserPreferences';
 import { availableTools, ToolContext } from '../contexts/ToolContext';
 import { Tool } from '../enums/Tool';
 

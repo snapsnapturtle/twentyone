@@ -3,9 +3,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { config, useSpring } from 'react-spring';
 import { useFrame, useThree, useUpdate } from 'react-three-fiber';
 import { BufferGeometry, Color, Mesh, Vector3 } from 'three';
-import { MeshLine, MeshLineMaterial } from '../../../types/Three.Meshline';
-import { calculateDistance } from '../../../util/calculateDistance';
-import { useUserPreferences } from '../../preferences/hooks/useUserPreferences';
+import { MeshLine, MeshLineMaterial } from '../../../../types/Three.Meshline';
+import { calculateDistance } from '../../../../util/calculateDistance';
+import { useUserPreferences } from '../../../preferences/hooks/useUserPreferences';
 import { useColors } from '../hooks/useColors';
 import { useRelativeMousePosition } from '../hooks/useRelativeMousePosition';
 

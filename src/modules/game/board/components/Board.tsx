@@ -1,11 +1,11 @@
 import { Stats, useContextBridge } from '@react-three/drei';
 import React, { createRef, Suspense, useEffect, useState } from 'react';
 import { Canvas } from 'react-three-fiber';
-import { CanvasLoading } from '../../../shared/components/CanvasLoading';
-import { connection } from '../../../shared/connection';
+import { CanvasLoading } from '../../../../shared/components/CanvasLoading';
+import { connection } from '../../../../shared/connection';
 import { DiceSix } from '../../dice/DiceSix';
-import { UserPreferencesContext } from '../../preferences/contexts/UserPreferencesContext';
-import { useUserPreferences } from '../../preferences/hooks/useUserPreferences';
+import { UserPreferencesContext } from '../../../preferences/contexts/UserPreferencesContext';
+import { useUserPreferences } from '../../../preferences/hooks/useUserPreferences';
 import { ToolContext } from '../../toolbox/contexts/ToolContext';
 import { Tool } from '../../toolbox/enums/Tool';
 import { useActiveTool } from '../../toolbox/hooks/useActiveTool';
@@ -54,7 +54,6 @@ export const Board = () => {
                             width={25}
                             height={13}
                         />
-                        {/*<CursorPositions />*/}
                         <DiceSix />
                         {tool === Tool.RULER_LINE && <PolyLineRuler />}
                         {tool === Tool.RULER_CIRCLE && <CircleRuler />}

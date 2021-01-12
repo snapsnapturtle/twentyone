@@ -4,7 +4,7 @@ import { Plus } from 'baseui/icon';
 import { Modal, ModalBody, ModalButton, ModalFooter, ModalHeader } from 'baseui/modal';
 import { ParagraphMedium } from 'baseui/typography';
 import React, { useState } from 'react';
-import { connection } from '../../../shared/connection';
+import { connection } from '../../../../shared/connection';
 
 export function TokenCreator() {
     const [ showModal, setShowModal ] = useState<boolean>(false);
