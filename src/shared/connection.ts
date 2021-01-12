@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-export const connection = io('http://localhost:4000', {
+export const connection = io('http://twentyone-300010.appspot.com', {
     transports: [ 'websocket' ],
     reconnectionAttempts: 3
 });
