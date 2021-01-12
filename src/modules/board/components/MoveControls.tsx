@@ -8,5 +8,5 @@ export function MoveControls() {
         RIGHT: THREE.MOUSE.PAN
     };
 
-    return <MapControls enableRotate={true} enableDamping={false} mouseButtons={keyMapping} maxZoom={150} minZoom={10} />;
+    return <MapControls enableRotate={false} enableDamping={false} mouseButtons={keyMapping} maxZoom={150} minZoom={10} />;
 }
