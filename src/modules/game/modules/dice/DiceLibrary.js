@@ -14,13 +14,22 @@ class DiceManagerClass {
         this.barrierBodyMaterial = new CANNON.Material('barrier');
 
         world.addContactMaterial(
-            new CANNON.ContactMaterial(this.floorBodyMaterial, this.diceBodyMaterial, { friction: 0, restitution: 0.75 })
+            new CANNON.ContactMaterial(this.floorBodyMaterial, this.diceBodyMaterial, {
+                friction: 0.1,
+                restitution: 0.3
+            })
         );
         world.addContactMaterial(
-            new CANNON.ContactMaterial(this.barrierBodyMaterial, this.diceBodyMaterial, { friction: 0, restitution: 1 })
+            new CANNON.ContactMaterial(this.barrierBodyMaterial, this.diceBodyMaterial, {
+                friction: 0,
+                restitution: 0.5
+            })
         );
         world.addContactMaterial(
-            new CANNON.ContactMaterial(this.diceBodyMaterial, this.diceBodyMaterial, { friction: 0, restitution: 0.5 })
+            new CANNON.ContactMaterial(this.diceBodyMaterial, this.diceBodyMaterial, {
+                friction: 0,
+                restitution: 0.3
+            })
         );
     }
 

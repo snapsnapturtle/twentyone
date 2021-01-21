@@ -1,7 +1,7 @@
-import { Html } from '@react-three/drei';
 import CANNON, { Vec3, World } from 'cannon';
-import React, { useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
+import { useGameStore } from '../../hooks/useGameStore';
 import { DiceManager, DiceObject } from './DiceLibrary';
 import { useCreateDice } from './hooks/useCreateDice';
 
@@ -12,11 +12,13 @@ export function DiceSix() {
     const { scene } = useThree();
     const diceRefs = useRef<DiceObject[]>([]);
     const rollDice = useCreateDice();
+    const diceToRoll = useGameStore(state => state.dice);
+    const setDice = useGameStore(state => state.setDice);
 
-    useMemo(() => {
-        const world = new World();
+    useEffect(() => {
+        DiceManager.setWorld(new World());
 
-        world.addBody(new CANNON.Body({ mass: 0, shape: new CANNON.Plane(), material: DiceManager.floorBodyMaterial, position: new Vec3(0, 0, -1) }));
+        DiceManager.world.addBody(new CANNON.Body({ mass: 0, shape: new CANNON.Plane(), material: DiceManager.floorBodyMaterial, position: new Vec3(0, 0, -1) }));
 
         let wallTop = new CANNON.Body({
             mass: 0,
@@ -50,12 +52,11 @@ export function DiceSix() {
         });
         wallBottom.quaternion.setFromAxisAngle(new Vec3(-1, 0, 0), Math.PI / 2.5);
 
-        world.addBody(wallTop);
-        world.addBody(wallLeft);
-        world.addBody(wallRight);
-        world.addBody(wallBottom);
+        DiceManager.world.addBody(wallTop);
+        DiceManager.world.addBody(wallLeft);
+        DiceManager.world.addBody(wallRight);
+        DiceManager.world.addBody(wallBottom);
 
-        DiceManager.setWorld(world);
         DiceManager.world.gravity.set(0, 0, -9.82 * 2);
         DiceManager.world.broadphase = new CANNON.NaiveBroadphase();
         DiceManager.world.solver.iterations = 10;
@@ -69,23 +70,27 @@ export function DiceSix() {
         });
     });
 
-    const handleRollDiceClick = () => {
-        if (diceRefs.current.length) {
-            diceRefs.current.forEach(it => {
-                scene.remove(it.getObject());
-                DiceManager.world.remove(it.getObject().body);
+    useEffect(() => {
+        if (diceToRoll.length > 0) {
+            if (diceRefs.current.length) {
+                diceRefs.current.forEach(it => {
+                    scene.remove(it.getObject());
+                    DiceManager.world.remove(it.getObject().body);
+                });
+            }
+
+            rollDice(diceToRoll).then(rolledDice => {
+                rolledDice.forEach(it => {
+                    scene.add(it.dice.getObject());
+                    diceRefs.current.push(it.dice);
+                });
+
+                setDice([]);
             });
         }
+    }, [ diceToRoll, rollDice, scene, setDice ]);
 
-        rollDice('d6', 6).then(obj => {
-            scene.add(obj.getObject());
-            diceRefs.current.push(obj);
-        });
-    };
+    console.log(diceToRoll);
 
-    return <>
-        <Html center>
-            <button onClick={handleRollDiceClick}>roll dice</button>
-        </Html>
-    </>;
+    return null;
 }

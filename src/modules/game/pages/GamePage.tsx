@@ -7,6 +7,7 @@ import { SocketConnectionStatus } from '../components/SocketConnectionStatus';
 import { Board } from '../modules/board/components/Board';
 import { ColorsContextProvider } from '../modules/board/context/ColorsContext';
 import { Chat } from '../modules/chat/components/Chat';
+import { DiceSelector } from '../modules/dice/DiceSelector';
 import { Toolbox } from '../modules/toolbox/components/Toolbox';
 import { ToolContextProvider } from '../modules/toolbox/contexts/ToolContext';
 
@@ -47,6 +48,7 @@ export function GamePage() {
                     </ColorsContextProvider>
                     <Chat />
                 </div>
+                <DiceSelector />
                 <Toolbox />
             </ToolContextProvider>
         </>

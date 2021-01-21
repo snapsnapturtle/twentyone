@@ -45,7 +45,7 @@ export const Board = (props: { sessionKey: string }) => {
                 shadowMap={true}
                 pixelRatio={userPreferences.devicePixelRatio}
                 colorManagement={false}
-                camera={{ zoom: 60, up: [ 0, 0, 1 ], far: 10000, near: 0.1 }}
+                camera={{ zoom: 60, up: [ 0, 0, 1 ], far: 10000, near: -10 }}
             >
                 <ContextBridge>
                     <Suspense fallback={<CanvasLoading />}>
