@@ -13,6 +13,7 @@ export function SquareGridMap({ width, height }: SquareGridMapProps) {
     const halfHeight = Math.ceil(height / 2) - .5;
     const halfWidth = Math.ceil(width / 2) - .5;
 
+    // const texture: any = useTexture('/assets/map.png');
     const points: Vector3[] = [];
 
     for (let i = -halfHeight; i <= halfHeight; i++) {
@@ -32,12 +33,17 @@ export function SquareGridMap({ width, height }: SquareGridMapProps) {
     return (
         <>
             <mesh position={[ 0, 0, -1 ]} receiveShadow={true}>
-                <planeBufferGeometry args={[ width, height ]} />
-                <meshStandardMaterial color={new Color(colors.backgroundPrimary)} />
+                <planeBufferGeometry args={[ width + 2, height + 2 ]} attach="geometry" />
+                <shadowMaterial attach="material" />
+            </mesh>
+            <mesh position={[ 0, 0, -1 ]}>
+                <planeBufferGeometry args={[ width + 2, height + 2 ]} attach="geometry" />
+                {/*<meshBasicMaterial map={texture} attach="material" />*/}
+                <meshBasicMaterial color={new Color(colors.backgroundPrimary)} attach="material" />
             </mesh>
             <lineSegments position={[ 0, 0, -1 ]}>
                 <bufferGeometry attach="geometry" ref={geometryRef} />
-                <meshBasicMaterial color={new Color(colors.contentStateDisabled)} />
+                <meshBasicMaterial color={new Color(colors.contentStateDisabled)} attach="material" />
             </lineSegments>
         </>
     );

@@ -14,10 +14,10 @@ class DiceManagerClass {
         this.barrierBodyMaterial = new CANNON.Material('barrier');
 
         world.addContactMaterial(
-            new CANNON.ContactMaterial(this.floorBodyMaterial, this.diceBodyMaterial, { friction: 0, restitution: 0.5 })
+            new CANNON.ContactMaterial(this.floorBodyMaterial, this.diceBodyMaterial, { friction: 0, restitution: 0.75 })
         );
         world.addContactMaterial(
-            new CANNON.ContactMaterial(this.barrierBodyMaterial, this.diceBodyMaterial, { friction: 0, restitution: 0 })
+            new CANNON.ContactMaterial(this.barrierBodyMaterial, this.diceBodyMaterial, { friction: 0, restitution: 1 })
         );
         world.addContactMaterial(
             new CANNON.ContactMaterial(this.diceBodyMaterial, this.diceBodyMaterial, { friction: 0, restitution: 0.5 })
@@ -63,7 +63,6 @@ class DiceManagerClass {
             }
 
             if (allStable) {
-                console.log('all stable')
                 DiceManager.world.removeEventListener('postStep', check);
 
                 for (let i = 0; i < diceValues.length; i++) {
@@ -576,7 +575,7 @@ export class DiceD20 extends DiceObject {
         this.faceTexts = [' ', '0', '1', '2', '3', '4', '5', '6', '7', '8',
             '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'];
         this.textMargin = 1.0;
-        this.mass = 500;
+        this.mass = 5;
         this.inertia = 6;
 
         this.create();

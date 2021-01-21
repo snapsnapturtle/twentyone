@@ -4,6 +4,7 @@ import { Tab, Tabs } from 'baseui/tabs-motion';
 import React, { ReactText, useContext, useState } from 'react';
 import { Preferences } from '../contexts/Preferences';
 import { UserPreferencesContext } from '../contexts/UserPreferencesContext';
+import { DicePreferences } from './DicePreferences';
 import { GeneralPreferences } from './GeneralPreferences';
 import { RulerPreferences } from './RulerPreferences';
 
@@ -15,7 +16,6 @@ const SettingsIcon = () => (
         />
     </svg>
 );
-
 
 export function UserPreferences() {
     const [ activeKey, setActiveKey ] = useState<ReactText>(0);
@@ -62,7 +62,9 @@ export function UserPreferences() {
                         <Tab title="Ruler">
                             <RulerPreferences onPreferencesChange={setChangedPreferences} preferences={changedPreferences} />
                         </Tab>
-                        <Tab title="Misc">TBD</Tab>
+                        <Tab title="Dice">
+                            <DicePreferences onPreferencesChange={setChangedPreferences} preferences={changedPreferences} />
+                        </Tab>
                     </Tabs>
                 </ModalBody>
                 <ModalFooter>

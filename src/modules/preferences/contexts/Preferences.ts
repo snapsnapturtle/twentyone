@@ -3,4 +3,5 @@ export interface Preferences {
     devicePixelRatio: number;
     displayName: string;
     snapRulerToCenter: boolean;
+    diceThrowStrength: number;
 }

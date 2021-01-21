@@ -4,7 +4,7 @@ import { useSpring } from 'react-spring';
 import { useFrame } from 'react-three-fiber';
 import { addV, useDrag } from 'react-use-gesture';
 import { Mesh } from 'three';
-import { connection } from '../../../../shared/connection';
+import { useConnection } from '../../../hooks/useConnection';
 import { Tool } from '../../toolbox/enums/Tool';
 import { useActiveTool } from '../../toolbox/hooks/useActiveTool';
 import { useConvertPixelToCanvas } from '../hooks/useConvertPixelToCanvas';
@@ -12,7 +12,8 @@ import { useConvertPixelToCanvas } from '../hooks/useConvertPixelToCanvas';
 interface TokenProps {
     id: number;
     position: [ x: number, y: number ];
-    assetUrl: string
+    assetUrl: string;
+    sessionKey: string;
 }
 
 export function Token(props: TokenProps) {
@@ -22,10 +23,11 @@ export function Token(props: TokenProps) {
     const draggableTokenPosition = useRef<[ x: number, y: number ]>([ props.position[ 0 ], props.position[ 1 ] ]);
     const screenToCanvas = useConvertPixelToCanvas();
     const texture: any = useTexture(props.assetUrl);
+    const connection = useConnection(props.sessionKey);
 
     const [ { x, y }, set ] = useSpring<{ x: number, y: number }>(() => ({
         x: props.position[ 0 ],
-        y: props.position[ 0 ]
+        y: props.position[ 1 ]
     }));
 
     const bind = useDrag(({ last, movement, altKey }) => {
@@ -41,7 +43,7 @@ export function Token(props: TokenProps) {
                 newPosition.y = Math.round(newPosition.y);
             }
 
-            connection.emit('update_position', {
+            connection?.emit('update_token_position', {
                 id: props.id,
                 ...newPosition
             });
@@ -70,7 +72,7 @@ export function Token(props: TokenProps) {
 
     return (
         <>
-            <mesh ref={draggableTokenMesh} {...bind()}>
+            <mesh ref={draggableTokenMesh} position={[ 0, 0, -1 ]} {...bind()}>
                 <planeBufferGeometry attach="geometry" />
                 <meshBasicMaterial map={texture} attach="material" transparent opacity={0.5} />
             </mesh>

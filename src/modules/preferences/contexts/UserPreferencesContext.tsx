@@ -5,7 +5,8 @@ const defaultPreferences: Preferences = {
     theme: 'auto',
     displayName: '',
     devicePixelRatio: 1,
-    snapRulerToCenter: true
+    snapRulerToCenter: true,
+    diceThrowStrength: 2
 };
 
 interface IUserPreferencesContext {

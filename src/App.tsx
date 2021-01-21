@@ -1,19 +1,16 @@
 import { BaseProvider, DarkTheme, LightTheme } from 'baseui';
-import { Check } from 'baseui/icon';
-import { DURATION, SnackbarProvider, useSnackbar } from 'baseui/snackbar';
-import React, { FC, useEffect } from 'react';
+import { ToasterContainer } from 'baseui/toast';
+import React, { FC } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Client as Styletron } from 'styletron-engine-atomic';
 import { Provider as StyletronProvider } from 'styletron-react';
-import { Board } from './modules/game/board/components/Board';
-import { ColorsContextProvider } from './modules/game/board/context/ColorsContext';
-import { CollaboratorBar } from './modules/game/collaborators/components/CollaboratorBar';
+import { DashboardPage } from './modules/dashboard/pages/DashboardPage';
+import { GamePage } from './modules/game/pages/GamePage';
+import { JoinSessionPage } from './modules/join-session/pages/JoinSessionPage';
 import { UserPreferencesContextProvider } from './modules/preferences/contexts/UserPreferencesContext';
 import { useUserPreferences } from './modules/preferences/hooks/useUserPreferences';
-import { Toolbox } from './modules/game/toolbox/components/Toolbox';
-import { ToolContextProvider } from './modules/game/toolbox/contexts/ToolContext';
+import { ProfilePage } from './modules/profile/pages/ProfilePage';
 import { Main } from './shared/components/Main';
-import { ShortcutHandler } from './shared/components/ShortcutHandler';
-import { connection } from './shared/connection';
 
 const engine = new Styletron();
 
@@ -36,43 +33,25 @@ const UserBaseProvider: FC = ({ children }) => {
     return <BaseProvider theme={theme} children={children!!} />;
 };
 
-function ConnectionStatus() {
-    const { enqueue, dequeue } = useSnackbar();
-
-    useEffect(() => {
-        connection.io.on('error', () => {
-            enqueue({ message: 'Reconnecting to server...', progress: true }, DURATION.infinite);
-        });
-
-        connection.io.on('reconnect', () => {
-            dequeue()
-            enqueue({ message: 'Connection established', startEnhancer: ({ size }) => <Check size={size} /> });
-        });
-    }, [dequeue, enqueue]);
-
-    return null;
-}
 
 function App() {
     return (
         <StyletronProvider value={engine}>
             <UserPreferencesContextProvider>
                 <UserBaseProvider>
-                    <SnackbarProvider>
-                        <ConnectionStatus />
-                        <div style={{ display: 'flex', height: '100%' }}>
-                            <ToolContextProvider>
-                                <ShortcutHandler />
-                                <Main>
-                                    <ColorsContextProvider>
-                                        <Board />
-                                    </ColorsContextProvider>
-                                    <Toolbox />
-                                    <CollaboratorBar />
-                                </Main>
-                            </ToolContextProvider>
-                        </div>
-                    </SnackbarProvider>
+                    <ToasterContainer>
+                        <BrowserRouter>
+                            <Main>
+                                <Switch>
+                                    <Route exact path="/" component={DashboardPage} />
+                                    <Route exact path="/session/:sessionKey" component={GamePage} />
+                                    <Route exact path="/join-session" component={JoinSessionPage} />
+                                    <Route exact path="/join-session/:sessionKey" component={JoinSessionPage} />
+                                    <Route exact path="/profile" component={ProfilePage} />
+                                </Switch>
+                            </Main>
+                        </BrowserRouter>
+                    </ToasterContainer>
                 </UserBaseProvider>
             </UserPreferencesContextProvider>
         </StyletronProvider>
