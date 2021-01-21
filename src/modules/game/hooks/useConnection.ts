@@ -6,7 +6,7 @@ let connection: Socket;
 const initiateConnection = (room: string) => {
     if (!connection) {
         console.log('Creating new connection to socket');
-        connection = io('https://twentyone-backend.herokuapp.com', {
+        connection = io(process.env.REACT_APP_GATEWAY_URL!!, {
             transports: [ 'websocket' ],
             reconnectionAttempts: 3,
             query: 'r_var=' + room
