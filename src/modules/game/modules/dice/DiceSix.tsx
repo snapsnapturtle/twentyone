@@ -1,7 +1,6 @@
 import CANNON, { Quaternion, Vec3, World } from 'cannon';
 import { useEffect, useRef } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
-import { Color, DoubleSide, Mesh, Vector3 } from 'three';
 import { useGameStore } from '../../hooks/useGameStore';
 import { DiceManager, DiceObject } from './DiceLibrary';
 import { useCreateDice } from './hooks/useCreateDice';
@@ -30,7 +29,7 @@ export function DiceSix() {
             mass: 0,
             shape: new CANNON.Plane(),
             material: DiceManager.barrierBodyMaterial,
-            position: new Vec3(0, 0, 4.5),
+            position: new Vec3(0, 0, 4.5)
         });
         ceiling.quaternion.setFromAxisAngle(new Vec3(1, 0, 0), Math.PI);
 
@@ -66,15 +65,15 @@ export function DiceSix() {
         });
         wallBottom.quaternion.setFromAxisAngle(new Vec3(-1, 0, 0), Math.PI / 2);
 
+        DiceManager.world.addBody(ceiling);
         DiceManager.world.addBody(wallTop);
         DiceManager.world.addBody(wallLeft);
         DiceManager.world.addBody(wallRight);
         DiceManager.world.addBody(wallBottom);
-        DiceManager.world.addBody(ceiling);
 
         DiceManager.world.gravity.set(0, 0, -9.82 * 2);
         DiceManager.world.broadphase = new CANNON.NaiveBroadphase();
-        DiceManager.world.solver.iterations = 10;
+        DiceManager.world.solver.iterations = 16;
     }, []);
 
     useFrame(() => {
