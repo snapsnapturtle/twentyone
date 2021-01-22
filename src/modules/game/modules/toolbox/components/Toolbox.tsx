@@ -44,7 +44,7 @@ export function Toolbox() {
                 display: 'inline-block',
                 position: 'absolute',
                 top: '50%',
-                left: '1em',
+                left: '2em',
                 transform: 'translateY(-50%)',
                 boxShadow: theme.lighting.shadow600,
                 background: theme.colors.backgroundTertiary
