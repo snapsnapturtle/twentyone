@@ -1,4 +1,4 @@
-import CANNON, { Quaternion, Vec3, World } from 'cannon';
+import CANNON, { Vec3, World } from 'cannon';
 import { useEffect, useRef } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
 import { useGameStore } from '../../hooks/useGameStore';
@@ -89,7 +89,7 @@ export function DiceSix() {
             if (diceRefs.current.length) {
                 diceRefs.current.forEach(it => {
                     scene.remove(it.getObject());
-                    DiceManager.world.remove(it.getObject().body);
+                    DiceManager.world.remove(it.getObject().body!!);
                 });
             }
 

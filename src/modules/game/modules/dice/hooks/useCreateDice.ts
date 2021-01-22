@@ -60,13 +60,13 @@ export function useCreateDice(): (requestedDice: { diceType: DiceType, result: n
 
             diceObject.updateBodyFromMesh();
 
-            diceObject.getObject().body.velocity.set(
+            diceObject.getObject().body?.velocity.set(
                 Math.random() * 20 - 10,
                 Math.random() * 20 - 10,
                 10
             );
 
-            diceObject.getObject().body.angularVelocity.set(
+            diceObject.getObject().body?.angularVelocity.set(
                 Math.random() * 3 + 3,
                 Math.random() * 3 + 3,
                 Math.random() * 3 + 3
