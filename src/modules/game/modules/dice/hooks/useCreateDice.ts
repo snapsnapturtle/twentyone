@@ -56,14 +56,14 @@ export function useCreateDice(): (requestedDice: { diceType: DiceType, result: n
 
             diceObject.getObject().position.x = camera.position.x;
             diceObject.getObject().position.y = camera.position.y;
-            diceObject.getObject().position.z = 4;
+            diceObject.getObject().position.z = 3;
 
             diceObject.updateBodyFromMesh();
 
             diceObject.getObject().body.velocity.set(
                 Math.random() * 20 - 10,
                 Math.random() * 20 - 10,
-                0
+                10
             );
 
             diceObject.getObject().body.angularVelocity.set(

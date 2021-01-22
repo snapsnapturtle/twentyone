@@ -1,6 +1,7 @@
-import CANNON, { Vec3, World } from 'cannon';
+import CANNON, { Quaternion, Vec3, World } from 'cannon';
 import { useEffect, useRef } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
+import { Color, DoubleSide, Mesh, Vector3 } from 'three';
 import { useGameStore } from '../../hooks/useGameStore';
 import { DiceManager, DiceObject } from './DiceLibrary';
 import { useCreateDice } from './hooks/useCreateDice';
@@ -18,44 +19,58 @@ export function DiceSix() {
     useEffect(() => {
         DiceManager.setWorld(new World());
 
-        DiceManager.world.addBody(new CANNON.Body({ mass: 0, shape: new CANNON.Plane(), material: DiceManager.floorBodyMaterial, position: new Vec3(0, 0, -1) }));
+        DiceManager.world.addBody(new CANNON.Body({
+            mass: 0,
+            shape: new CANNON.Plane(),
+            material: DiceManager.floorBodyMaterial,
+            position: new Vec3(0, 0, -1)
+        }));
 
-        let wallTop = new CANNON.Body({
+        const ceiling = new CANNON.Body({
+            mass: 0,
+            shape: new CANNON.Plane(),
+            material: DiceManager.barrierBodyMaterial,
+            position: new Vec3(0, 0, 4.5),
+        });
+        ceiling.quaternion.setFromAxisAngle(new Vec3(1, 0, 0), Math.PI);
+
+        const wallTop = new CANNON.Body({
             mass: 0,
             shape: new CANNON.Plane(),
             material: DiceManager.barrierBodyMaterial,
             position: new Vec3(0, boardHeight / 2, -1)
         });
-        wallTop.quaternion.setFromAxisAngle(new Vec3(1, 0, 0), Math.PI / 2.5);
+        wallTop.quaternion.setFromAxisAngle(new Vec3(1, 0, 0), Math.PI / 2);
 
-        let wallLeft = new CANNON.Body({
+        const wallLeft = new CANNON.Body({
             mass: 0,
             shape: new CANNON.Plane(),
             material: DiceManager.barrierBodyMaterial,
             position: new Vec3(-boardWidth / 2, 0, -1)
         });
-        wallLeft.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), Math.PI / 2.5);
+        wallLeft.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), Math.PI / 2);
 
-        let wallRight = new CANNON.Body({
+        const wallRight = new CANNON.Body({
             mass: 0,
             shape: new CANNON.Plane(),
             material: DiceManager.barrierBodyMaterial,
             position: new Vec3(boardWidth / 2, 0, -1)
         });
-        wallRight.quaternion.setFromAxisAngle(new Vec3(0, -1, 0), Math.PI / 2.5);
+        wallRight.quaternion.setFromAxisAngle(new Vec3(0, -1, 0), Math.PI / 2);
 
-        let wallBottom = new CANNON.Body({
+        const wallBottom = new CANNON.Body({
             mass: 0,
             shape: new CANNON.Plane(),
             material: DiceManager.barrierBodyMaterial,
             position: new Vec3(0, -boardHeight / 2, -1)
         });
-        wallBottom.quaternion.setFromAxisAngle(new Vec3(-1, 0, 0), Math.PI / 2.5);
+        wallBottom.quaternion.setFromAxisAngle(new Vec3(-1, 0, 0), Math.PI / 2);
 
         DiceManager.world.addBody(wallTop);
         DiceManager.world.addBody(wallLeft);
         DiceManager.world.addBody(wallRight);
         DiceManager.world.addBody(wallBottom);
+        DiceManager.world.addBody(ceiling);
 
         DiceManager.world.gravity.set(0, 0, -9.82 * 2);
         DiceManager.world.broadphase = new CANNON.NaiveBroadphase();
@@ -89,8 +104,6 @@ export function DiceSix() {
             });
         }
     }, [ diceToRoll, rollDice, scene, setDice ]);
-
-    console.log(diceToRoll);
 
     return null;
 }
