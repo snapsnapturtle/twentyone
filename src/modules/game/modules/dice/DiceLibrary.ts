@@ -6,18 +6,17 @@ import { Geometry, Mesh, MeshPhongMaterial, MeshPhongMaterialParameters, Texture
 interface DiceObjectValue {
     dice: DiceObject;
     value: number;
-    vectors?: unknown;
+    vectors?: { position: Vec3, quaternion: Quaternion, velocity: Vec3, angularVelocity: Vec3 };
     stableCount?: number;
 }
 
 class DiceManagerClass {
     public world: World = new World();
-
     public throwRunning: boolean = false;
 
-    readonly diceBodyMaterial: Material = new CANNON.Material('dice');
-    readonly floorBodyMaterial: Material = new CANNON.Material('floor');
-    readonly barrierBodyMaterial: Material = new CANNON.Material('barrier');
+    public readonly diceBodyMaterial: Material = new CANNON.Material('dice');
+    public readonly floorBodyMaterial: Material = new CANNON.Material('floor');
+    public readonly barrierBodyMaterial: Material = new CANNON.Material('barrier');
 
     setWorld(world: World) {
         this.world = world;
@@ -46,7 +45,7 @@ class DiceManagerClass {
 
     prepareValues(diceValues: DiceObjectValue[]) {
         if (this.throwRunning) {
-            throw new Error('Cannot start another throw. Please wait, till the current throw is finished.');
+            throw new Error('Cannot start another throw. Please wait, until the current throw is finished.');
         }
 
         for (let i = 0; i < diceValues.length; i++) {
@@ -65,6 +64,7 @@ class DiceManagerClass {
 
         let check = () => {
             let allStable = true;
+
             for (let i = 0; i < diceValues.length; i++) {
                 if (diceValues[i].dice.isFinished()) {
                     diceValues[ i ].stableCount!!++;
@@ -78,11 +78,11 @@ class DiceManagerClass {
             }
 
             if (allStable) {
-                DiceManager.world?.removeEventListener('postStep', check);
+                DiceManager.world.removeEventListener('postStep', check);
 
                 for (let i = 0; i < diceValues.length; i++) {
                     diceValues[ i ].dice.shiftUpperValue(diceValues[ i ].value);
-                    diceValues[ i ].dice.setVectors(diceValues[ i ].vectors);
+                    diceValues[ i ].dice.setVectors(diceValues[ i ].vectors!!);
                     diceValues[ i ].dice.simulationRunning = false;
                 }
 
@@ -90,7 +90,7 @@ class DiceManagerClass {
             }
         };
 
-        this.world?.addEventListener('postStep', check);
+        this.world.addEventListener('postStep', check);
     }
 }
 
@@ -130,7 +130,6 @@ export class DiceObject {
     protected faceTexts: string[] | number[][] = [];
     protected customTextTextureFunction?: (faceTexts: string | number[], labelColor: string, diceColor: string) => Texture;
 
-    // todo: rename?
     public values: number = 0;
 
     public simulationRunning: boolean = false;
@@ -158,31 +157,8 @@ export class DiceObject {
         this.diceColor = options.backColor;
     }
 
-    emulateThrow(onResult: (result: number) => void) {
-        let stableCount = 0;
-
-        let check = () => {
-            if (this.isFinished()) {
-                stableCount++;
-
-                if (stableCount === 50) {
-                    DiceManager.world.removeEventListener('postStep', check);
-                    onResult(this.getUpsideValue());
-                }
-            } else {
-                stableCount = 0;
-            }
-
-            // todo: this is probably not necessary when the world steps outside of the manager
-            // DiceManager.world.step(DiceManager.world.dt);
-        };
-
-        DiceManager.world.addEventListener('postStep', check);
-    }
-
     public isFinished(): boolean {
-        // todo: consider changing the threshold to Math.min(this.size / 100, 1)
-        const threshold = 1;
+        const threshold = Math.min(this.size / 100, 1);
 
         const angularVelocity = this.object.body?.angularVelocity;
         const velocity = this.object.body?.velocity;
@@ -232,20 +208,16 @@ export class DiceObject {
         return closestFace!!.materialIndex - 1;
     }
 
-    getCurrentVectors() {
-        // fixme: this function needs to be typed
-
+    public getCurrentVectors(): { position: Vec3, quaternion: Quaternion, velocity: Vec3, angularVelocity: Vec3 } {
         return {
-            position: this.object.body?.position.clone(),
-            quaternion: this.object.body?.quaternion.clone(),
-            velocity: this.object.body?.velocity.clone(),
-            angularVelocity: this.object.body?.angularVelocity.clone()
+            position: this.object.body!!.position.clone(),
+            quaternion: this.object.body!!.quaternion.clone(),
+            velocity: this.object.body!!.velocity.clone(),
+            angularVelocity: this.object.body!!.angularVelocity.clone()
         };
     }
 
-    setVectors(vectors: any) {
-        // fixme: this function needs to be typed
-
+    public setVectors(vectors: { position: Vec3, quaternion: Quaternion, velocity: Vec3, angularVelocity: Vec3 }) {
         if (this.object.body) {
             this.object.body.position = vectors.position;
             this.object.body.quaternion = vectors.quaternion;
@@ -368,7 +340,6 @@ export class DiceObject {
 
         for (let i = 0; i < vertices.length; ++i) {
             const vertex = vertices[ i ].multiplyScalar(radius);
-            // todo: check if this line can be removed
             // @ts-ignore
             vertex.index = geom.vertices.push(vertex) - 1;
         }
@@ -377,8 +348,8 @@ export class DiceObject {
             let ii = faces[ i ], fl = ii.length - 1;
             let aa = Math.PI * 2 / fl;
             for (let j = 0; j < fl - 2; ++j) {
-                geom.faces.push(new THREE.Face3(ii[ 0 ], ii[ j + 1 ], ii[ j + 2 ], [ geom.vertices[ ii[ 0 ] ],
-                    geom.vertices[ ii[ j + 1 ] ], geom.vertices[ ii[ j + 2 ] ] ], undefined, ii[ fl ] + 1));
+                // @ts-ignore
+                geom.faces.push(new THREE.Face3(ii[ 0 ], ii[ j + 1 ], ii[ j + 2 ], [ geom.vertices[ ii[ 0 ] ], geom.vertices[ ii[ j + 1 ] ], geom.vertices[ ii[ j + 2 ] ] ], 0, ii[ fl ] + 1));
                 geom.faceVertexUvs[ 0 ].push([
                     new THREE.Vector2((Math.cos(af) + 1 + tab) / 2 / (1 + tab),
                         (Math.sin(af) + 1 + tab) / 2 / (1 + tab)),
@@ -482,8 +453,9 @@ export class DiceObject {
             throw new Error('You must call DiceManager.setWorld(world) first.');
         }
         const { geometry, cannonShape } = this.buildGeometries();
+        const diceMaterials = this.getMaterials();
 
-        this.object = new THREE.Mesh(geometry, this.getMaterials());
+        this.object = new THREE.Mesh(geometry, diceMaterials);
 
         this.object.receiveShadow = true;
         this.object.castShadow = true;
@@ -602,8 +574,7 @@ export class DiceD6 extends DiceObject {
             [ 3, 7, 6, 2, 4 ], [ 0, 4, 7, 3, 5 ], [ 4, 5, 6, 7, 6 ] ];
         this.scaleFactor = 0.9;
         this.values = 6;
-        this.faceTexts = [ ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8',
-            '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20' ];
+        this.faceTexts = [ ' ', '0', '1', '2', '3', '4', '5', '6.' ];
         this.textMargin = 1.0;
         this.mass = 4;
 
@@ -623,8 +594,7 @@ export class DiceD8 extends DiceObject {
             [ 1, 4, 2, 6 ], [ 1, 2, 5, 7 ], [ 1, 5, 3, 8 ] ];
         this.scaleFactor = 1;
         this.values = 8;
-        this.faceTexts = [ ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8',
-            '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20' ];
+        this.faceTexts = [ ' ', '0', '1', '2', '3', '4', '5', '6.', '7', '8' ];
         this.textMargin = 1.2;
         this.mass = 3;
 
@@ -654,8 +624,8 @@ export class DiceD10 extends DiceObject {
 
         this.scaleFactor = 0.9;
         this.values = 10;
-        this.faceTexts = [ ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8',
-            '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20' ];
+        this.faceTexts = [ ' ', '0', '1', '2', '3', '4', '5', '6.', '7', '8',
+            '9.', '0' ];
         this.textMargin = 1.0;
         this.mass = 3;
 
@@ -682,8 +652,8 @@ export class DiceD12 extends DiceObject {
             [ 13, 8, 12, 4, 5, 9 ], [ 5, 4, 14, 9, 15, 10 ], [ 0, 12, 8, 10, 16, 11 ], [ 3, 19, 7, 17, 1, 12 ] ];
         this.scaleFactor = 0.9;
         this.values = 12;
-        this.faceTexts = [ ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8',
-            '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20' ];
+        this.faceTexts = [ ' ', '0', '1', '2', '3', '4', '5', '6.', '7', '8',
+            '9.', '10', '11', '12' ];
         this.textMargin = 1.0;
         this.mass = 6;
 
@@ -709,8 +679,8 @@ export class DiceD20 extends DiceObject {
             [ 4, 9, 5, 16 ], [ 2, 4, 11, 17 ], [ 6, 2, 10, 18 ], [ 8, 6, 7, 19 ], [ 9, 8, 1, 20 ] ];
         this.scaleFactor = 1;
         this.values = 20;
-        this.faceTexts = [ ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8',
-            '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20' ];
+        this.faceTexts = [ ' ', '0', '1', '2', '3', '4', '5', '6.', '7', '8',
+            '9.', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20' ];
         this.textMargin = 1.0;
         this.mass = 5;
 
