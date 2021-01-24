@@ -2,15 +2,15 @@ import { useStyletron } from 'baseui';
 import { Button } from 'baseui/button';
 import React, { useState } from 'react';
 import { animated, useSpring } from 'react-spring';
-import { DiceD10Icon } from '../../../../shared/icons/DiceD10Icon';
-import { DiceD12Icon } from '../../../../shared/icons/DiceD12Icon';
-import { DiceD20Icon } from '../../../../shared/icons/DiceD20Icon';
-import { DiceD4Icon } from '../../../../shared/icons/DiceD4Icon';
-import { DiceD6Icon } from '../../../../shared/icons/DiceD6Icon';
-import { DiceD8Icon } from '../../../../shared/icons/DiceD8Icon';
-import { useGameStore } from '../../hooks/useGameStore';
-import { DiceButton } from './components/DiceButton';
-import { DiceType } from './hooks/useCreateDice';
+import { DiceD10Icon } from './DiceD10Icon';
+import { DiceD12Icon } from './DiceD12Icon';
+import { DiceD20Icon } from './DiceD20Icon';
+import { DiceD4Icon } from './DiceD4Icon';
+import { DiceD6Icon } from './DiceD6Icon';
+import { DiceD8Icon } from './DiceD8Icon';
+import { useGameStore } from '../../../hooks/useGameStore';
+import { DiceButton } from './DiceButton';
+import { DiceType } from '../hooks/useCreateDice';
 
 export function DiceSelector() {
     const [ css, theme ] = useStyletron();
