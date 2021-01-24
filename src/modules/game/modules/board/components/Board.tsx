@@ -38,7 +38,7 @@ export const Board = () => {
     }, [ connection ]);
 
     return (
-        <div ref={canvasRef} style={{ height: '100%', width: 'calc(100% - 20em)' }}>
+        <div ref={canvasRef} style={{ height: '100%', width: '100%' }}>
             <Canvas
                 concurrent
                 orthographic={true}

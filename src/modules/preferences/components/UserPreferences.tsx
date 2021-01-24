@@ -39,8 +39,8 @@ export function UserPreferences() {
                 overrides={{
                     Dialog: {
                         style: {
-                            width: '80vw',
-                            height: '80vh',
+                            width: '50em',
+                            height: 'auto',
                             display: 'flex',
                             flexDirection: 'column'
                         }

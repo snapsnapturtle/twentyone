@@ -33,7 +33,7 @@ export function GeneralPreferences({ onPreferencesChange, preferences }: General
             <FormControl label="Display Name">
                 <Input value={preferences.displayName} onChange={(e: any) => handleChange({ displayName: e.target.value })} />
             </FormControl>
-            <FormControl label="Render options">
+            <FormControl label="Render options" caption="It's recommended to refresh this page once the render quality has been changed.">
                 <Checkbox
                     checked={highResolution}
                     onChange={(e: any) => handleChange({ devicePixelRatio: e.target.checked ? window.devicePixelRatio : 1 })}

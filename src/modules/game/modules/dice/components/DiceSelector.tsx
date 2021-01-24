@@ -1,5 +1,6 @@
 import { useStyletron } from 'baseui';
 import { Button } from 'baseui/button';
+import { Delete } from 'baseui/icon';
 import React, { useState } from 'react';
 import { animated, config, useSpring } from 'react-spring';
 import { DiceD10Icon } from './DiceD10Icon';
@@ -51,18 +52,18 @@ export function DiceSelector() {
             <animated.div
                 className={css({
                     position: 'absolute',
-                    left: 'calc(50% - 160px)',
+                    left: 'calc(50%)',
                     bottom: '6em',
                     transform: 'translateX(-50%)',
-                    textAlign: 'center',
-                    boxShadow: theme.lighting.shadow600
                 })}
                 style={{
                     opacity: style.opacity,
                     bottom: style.bottom.interpolate(b => `${b}em`)
                 }}
             >
-                <Button kind="secondary" onClick={handleClearClick} overrides={{ Root: { style: { marginRight: theme.sizing.scale400 } } }}>Clear</Button>
+                <Button kind="secondary" onClick={handleClearClick} overrides={{ Root: { style: { marginRight: theme.sizing.scale400} } }}>
+                    Clear
+                </Button>
                 <Button onClick={handleRollClick}>Roll Dice</Button>
             </animated.div>
 
@@ -70,7 +71,7 @@ export function DiceSelector() {
                 className={css({
                     position: 'absolute',
                     bottom: '2em',
-                    left: 'calc(50% - 160px)',
+                    left: 'calc(50%)',
                     transform: 'translateX(-50%)',
                     textAlign: 'center',
                     boxShadow: theme.lighting.shadow600,
