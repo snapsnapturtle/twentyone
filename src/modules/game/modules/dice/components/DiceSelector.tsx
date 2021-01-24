@@ -1,17 +1,16 @@
 import { useStyletron } from 'baseui';
 import { Button } from 'baseui/button';
-import { Delete } from 'baseui/icon';
 import React, { useState } from 'react';
 import { animated, config, useSpring } from 'react-spring';
+import { useActiveDiceStore } from '../../../hooks/useActiveDiceStore';
+import { DiceType } from '../hooks/useCreateDice';
+import { DiceButton } from './DiceButton';
 import { DiceD10Icon } from './DiceD10Icon';
 import { DiceD12Icon } from './DiceD12Icon';
 import { DiceD20Icon } from './DiceD20Icon';
 import { DiceD4Icon } from './DiceD4Icon';
 import { DiceD6Icon } from './DiceD6Icon';
 import { DiceD8Icon } from './DiceD8Icon';
-import { useActiveDiceStore } from '../../../hooks/useActiveDiceStore';
-import { DiceButton } from './DiceButton';
-import { DiceType } from '../hooks/useCreateDice';
 
 export function DiceSelector() {
     const [ css, theme ] = useStyletron();
