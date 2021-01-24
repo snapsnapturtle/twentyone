@@ -457,7 +457,6 @@ export class DiceObject {
 
         this.object = new THREE.Mesh(geometry, diceMaterials);
 
-        this.object.receiveShadow = true;
         this.object.castShadow = true;
         this.object.diceObject = this;
 
