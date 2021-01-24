@@ -1,25 +1,26 @@
 import { useStyletron } from 'baseui';
 import { Button } from 'baseui/button';
 import React, { useState } from 'react';
-import { animated, useSpring } from 'react-spring';
+import { animated, config, useSpring } from 'react-spring';
 import { DiceD10Icon } from './DiceD10Icon';
 import { DiceD12Icon } from './DiceD12Icon';
 import { DiceD20Icon } from './DiceD20Icon';
 import { DiceD4Icon } from './DiceD4Icon';
 import { DiceD6Icon } from './DiceD6Icon';
 import { DiceD8Icon } from './DiceD8Icon';
-import { useGameStore } from '../../../hooks/useGameStore';
+import { useActiveDiceStore } from '../../../hooks/useActiveDiceStore';
 import { DiceButton } from './DiceButton';
 import { DiceType } from '../hooks/useCreateDice';
 
 export function DiceSelector() {
     const [ css, theme ] = useStyletron();
     const [ selectedDice, setSelectedDice ] = useState<DiceType[]>([]);
-    const setDice = useGameStore(state => state.setDice);
+    const setDice = useActiveDiceStore(state => state.setDice);
 
     const [ style, set ] = useSpring(() => ({
         bottom: 2,
-        opacity: 0
+        opacity: 0,
+        config: config.stiff
     }));
 
     const handleDiceAdd = (diceType: DiceType) => (e: React.MouseEvent) => {

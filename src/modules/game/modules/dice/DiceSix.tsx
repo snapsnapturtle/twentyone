@@ -1,7 +1,7 @@
 import CANNON, { Vec3, World } from 'cannon';
 import { useEffect, useRef } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
-import { useGameStore } from '../../hooks/useGameStore';
+import { useActiveDiceStore } from '../../hooks/useActiveDiceStore';
 import { DiceManager, DiceObject } from './DiceLibrary';
 import { useCreateDice } from './hooks/useCreateDice';
 
@@ -12,8 +12,8 @@ export function DiceSix() {
     const { scene } = useThree();
     const diceRefs = useRef<DiceObject[]>([]);
     const rollDice = useCreateDice();
-    const diceToRoll = useGameStore(state => state.dice);
-    const setDice = useGameStore(state => state.setDice);
+    const diceToRoll = useActiveDiceStore(state => state.dice);
+    const setDice = useActiveDiceStore(state => state.setDice);
 
     useEffect(() => {
         DiceManager.setWorld(new World());

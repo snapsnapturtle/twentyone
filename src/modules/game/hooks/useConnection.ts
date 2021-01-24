@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { io, Socket } from 'socket.io-client';
+import { useSessionKey } from './useSessionKey';
 
 let connection: Socket;
 
@@ -16,7 +17,9 @@ const initiateConnection = (room: string) => {
     return connection;
 };
 
-export function useConnection(sessionKey: string): Socket {
+export function useConnection(): Socket {
+    const sessionKey = useSessionKey();
+
     return useMemo(() => {
         initiateConnection(sessionKey);
 

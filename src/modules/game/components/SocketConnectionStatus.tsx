@@ -2,8 +2,8 @@ import { toaster } from 'baseui/toast';
 import React, { ReactText, useCallback, useEffect } from 'react';
 import { useConnection } from '../hooks/useConnection';
 
-export function SocketConnectionStatus(props: { sessionKey: string }) {
-    const connection = useConnection(props.sessionKey);
+export function SocketConnectionStatus() {
+    const connection = useConnection();
 
     const [ reconnectToastKey, setReconnectToastKey ] = React.useState<ReactText>();
 

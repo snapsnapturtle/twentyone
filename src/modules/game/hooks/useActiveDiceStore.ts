@@ -1,7 +1,7 @@
 import create from 'zustand';
 import { DiceType } from '../modules/dice/hooks/useCreateDice';
 
-export const useGameStore = create<{
+export const useActiveDiceStore = create<{
     dice: { diceType: DiceType, result: number }[],
     setDice: (dice: { diceType: DiceType, result: number }[]) => void
 }>(set => ({

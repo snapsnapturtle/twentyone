@@ -4,6 +4,7 @@ import { Redirect, useParams } from 'react-router-dom';
 import { axiosInstance } from '../../../shared/axios';
 import { ShortcutHandler } from '../components/ShortcutHandler';
 import { SocketConnectionStatus } from '../components/SocketConnectionStatus';
+import { SessionContextProvider } from '../context/SessionContext';
 import { Board } from '../modules/board/components/Board';
 import { ColorsContextProvider } from '../modules/board/context/ColorsContext';
 import { Chat } from '../modules/chat/components/Chat';
@@ -47,19 +48,19 @@ export function GamePage() {
     }
 
     return (
-        <>
-            <SocketConnectionStatus sessionKey={sessionKey} />
+        <SessionContextProvider sessionKey={sessionKey}>
+            <SocketConnectionStatus />
             <ToolContextProvider>
                 <ShortcutHandler />
                 <div style={{ display: 'flex', height: '100%' }}>
                     <ColorsContextProvider>
-                        <Board sessionKey={sessionKey} />
+                        <Board />
                     </ColorsContextProvider>
                     <Chat />
                 </div>
                 <DiceSelector />
                 <Toolbox />
             </ToolContextProvider>
-        </>
+        </SessionContextProvider>
     );
 }

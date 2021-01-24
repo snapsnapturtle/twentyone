@@ -17,11 +17,11 @@ import { PolyLineRuler } from './PolyLineRuler';
 import { SquareGridMap } from './SquareGridMap';
 import { Token } from './Token';
 
-export const Board = (props: { sessionKey: string }) => {
+export const Board = () => {
     const tool = useActiveTool();
     const userPreferences = useUserPreferences();
     const ContextBridge = useContextBridge(ToolContext, UserPreferencesContext, ColorsContext);
-    const connection = useConnection(props.sessionKey);
+    const connection = useConnection();
     const canvasRef = createRef<HTMLDivElement>();
     const [ tokens, setTokens ] = useState<{ id: number, x: number, y: number }[]>();
 
@@ -56,7 +56,7 @@ export const Board = (props: { sessionKey: string }) => {
                         {tool === Tool.RULER_LINE && <PolyLineRuler />}
                         {tool === Tool.RULER_CIRCLE && <CircleRuler />}
                         {tokens && tokens.map(it => <Token
-                            key={it.id} id={it.id} position={[ it.x, it.y ]} assetUrl="/assets/Goblin.png" sessionKey={props.sessionKey}
+                            key={it.id} id={it.id} position={[ it.x, it.y ]} assetUrl="/assets/Goblin.png"
                         />)}
                     </Suspense>
                 </ContextBridge>

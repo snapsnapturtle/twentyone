@@ -6,10 +6,12 @@ import { Input } from 'baseui/input';
 import { Modal, ModalBody, ModalButton, ModalFooter, ModalHeader } from 'baseui/modal';
 import React, { useState } from 'react';
 import { axiosInstance } from '../../../../../shared/axios';
+import { useSessionKey } from '../../../hooks/useSessionKey';
 
 export function TokenCreator() {
     const [ showModal, setShowModal ] = useState<boolean>(false);
     const [ loading, setLoading ] = useState<boolean>(false);
+    const sessionKey = useSessionKey()
 
     const handleCreate = (e: React.FormEvent) => {
         e.preventDefault();
@@ -20,7 +22,7 @@ export function TokenCreator() {
 
         setLoading(true);
 
-        axiosInstance.post('/v1/sessions/h8xns1pym/tokens', {
+        axiosInstance.post(`/v1/sessions/${sessionKey}/tokens`, {
             name: 'goblin-1',
             position: {
                 x: 0,

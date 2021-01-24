@@ -13,7 +13,6 @@ interface TokenProps {
     id: number;
     position: [ x: number, y: number ];
     assetUrl: string;
-    sessionKey: string;
 }
 
 export function Token(props: TokenProps) {
@@ -23,7 +22,7 @@ export function Token(props: TokenProps) {
     const draggableTokenPosition = useRef<[ x: number, y: number ]>([ props.position[ 0 ], props.position[ 1 ] ]);
     const screenToCanvas = useConvertPixelToCanvas();
     const texture: any = useTexture(props.assetUrl);
-    const connection = useConnection(props.sessionKey);
+    const connection = useConnection();
 
     const [ { x, y }, set ] = useSpring<{ x: number, y: number }>(() => ({
         x: props.position[ 0 ],
@@ -43,7 +42,7 @@ export function Token(props: TokenProps) {
                 newPosition.y = Math.round(newPosition.y);
             }
 
-            connection?.emit('update_token_position', {
+            connection.emit('update_token_position', {
                 id: props.id,
                 ...newPosition
             });
