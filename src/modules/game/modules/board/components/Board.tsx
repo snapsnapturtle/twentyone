@@ -3,7 +3,6 @@ import React, { createRef, Suspense, useEffect, useState } from 'react';
 import { Canvas } from 'react-three-fiber';
 import { UserPreferencesContext } from '../../../../preferences/contexts/UserPreferencesContext';
 import { useUserPreferences } from '../../../../preferences/hooks/useUserPreferences';
-import { BoardPreferencesForm } from '../../../components/BoardPreferencesForm';
 import { SessionContext } from '../../../context/SessionContext';
 import { useActiveBoard } from '../../../hooks/useActiveBoard';
 import { useConnection } from '../../../hooks/useConnection';

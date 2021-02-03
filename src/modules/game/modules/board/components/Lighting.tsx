@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { useResource } from 'react-three-fiber';
-import { DirectionalLight } from 'three';
+import { useFrame, useResource, useThree } from 'react-three-fiber';
+import { DirectionalLight, Vector3 } from 'three';
 import { useUserPreferences } from '../../../../preferences/hooks/useUserPreferences';
 import { useActiveBoard } from '../../../hooks/useActiveBoard';
 
@@ -8,6 +8,7 @@ import { useActiveBoard } from '../../../hooks/useActiveBoard';
 export function Lighting() {
     const lightRef = useResource<DirectionalLight>();
     const preferences = useUserPreferences();
+    const { camera } = useThree();
     const { width: boardWidth, height: boardHeight } = useActiveBoard();
 
     useEffect(() => {
@@ -23,6 +24,13 @@ export function Lighting() {
             // todo: when changing the shadow map size, the camera should rebuild
         }
     }, [ boardHeight, boardWidth, lightRef, preferences.devicePixelRatio ]);
+
+    useFrame(() => {
+        lightRef.current.position.copy(camera.position).add(new Vector3(15, 15, 0));
+        lightRef.current.position.z = 150 - camera.zoom;
+
+        console.log(camera.zoom);
+    });
 
     return (
         <>

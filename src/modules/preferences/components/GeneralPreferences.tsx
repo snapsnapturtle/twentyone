@@ -13,6 +13,7 @@ interface GeneralPreferencesProps {
 
 export function GeneralPreferences({ onPreferencesChange, preferences }: GeneralPreferencesProps) {
     const highResolution = preferences.devicePixelRatio > 1;
+    const showResolutionSwitch = window.devicePixelRatio !== 1;
 
     const handleChange = (partialPreferences: Partial<Preferences>) =>
         onPreferencesChange(current => ({ ...current, ...partialPreferences }));
@@ -33,15 +34,14 @@ export function GeneralPreferences({ onPreferencesChange, preferences }: General
             <FormControl label="Display Name">
                 <Input value={preferences.displayName} onChange={(e: any) => handleChange({ displayName: e.target.value })} />
             </FormControl>
-            <FormControl label="Render options" caption="It's recommended to refresh this page once the render quality has been changed.">
+            {showResolutionSwitch && <FormControl label="Render options" caption="It's recommended to refresh this page once the render quality has been changed.">
                 <Checkbox
                     checked={highResolution}
                     onChange={(e: any) => handleChange({ devicePixelRatio: e.target.checked ? window.devicePixelRatio : 1 })}
-                    disabled={window.devicePixelRatio === 1}
                 >
                     Use high resolution rendering
                 </Checkbox>
-            </FormControl>
+            </FormControl>}
         </>
     );
 }

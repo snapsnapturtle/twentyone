@@ -1,6 +1,5 @@
 import { useStyletron } from 'baseui';
 import { Button } from 'baseui/button';
-import { ArrowRight } from 'baseui/icon';
 import React, { useState } from 'react';
 import { animated, config, useSpring } from 'react-spring';
 import { useActiveDiceStore } from '../../../hooks/useActiveDiceStore';
@@ -52,14 +51,23 @@ export function DiceSelector() {
                     position: 'absolute',
                     left: 'calc(50%)',
                     bottom: '6em',
-                    transform: 'translateX(-50%)',
+                    transform: 'translateX(-50%)'
                 })}
                 style={{
                     opacity: style.opacity,
                     bottom: style.bottom.interpolate(b => `${b}em`)
                 }}
             >
-                <Button kind="secondary" onClick={handleClearClick} overrides={{ Root: { style: { marginRight: theme.sizing.scale400} } }}>
+                <Button
+                    kind="secondary" onClick={handleClearClick} overrides={{
+                    Root: {
+                        style: {
+                            marginRight: theme.sizing.scale400,
+                            boxShadow: theme.lighting.shadow600
+                        }
+                    }
+                }}
+                >
                     Cancel
                 </Button>
                 <Button onClick={handleRollClick}>Roll Dice</Button>

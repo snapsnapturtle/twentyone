@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { AvailableBoardsList } from '../components/AvailableBoardsList';
+import { AvailableBoards } from '../components/AvailableBoards';
 import { SocketConnectionStatus } from '../components/SocketConnectionStatus';
 import { SessionContextProvider } from '../context/SessionContext';
 import { Board } from '../modules/board/components/Board';
@@ -25,7 +25,7 @@ export function GamePage() {
                 </ColorsContextProvider>
                 <DiceSelector />
                 <Toolbox />
-                <AvailableBoardsList />
+                <AvailableBoards />
             </ToolContextProvider>
         </SessionContextProvider>
     );
