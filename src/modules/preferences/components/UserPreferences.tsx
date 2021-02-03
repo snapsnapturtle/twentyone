@@ -40,7 +40,7 @@ export function UserPreferences() {
                     Dialog: {
                         style: {
                             width: '50em',
-                            height: 'auto',
+                            height: '70vh',
                             display: 'flex',
                             flexDirection: 'column'
                         }

@@ -158,7 +158,7 @@ export class DiceObject {
     }
 
     public isFinished(): boolean {
-        const threshold = Math.min(this.size / 100, 1);
+        const threshold = Math.min(this.size / 10, 1);
 
         const angularVelocity = this.object.body?.angularVelocity;
         const velocity = this.object.body?.velocity;

@@ -2,16 +2,16 @@ import CANNON, { Vec3, World } from 'cannon';
 import { useEffect, useRef } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
 import { useActiveDiceStore } from '../../hooks/useActiveDiceStore';
+import { useActiveBoard } from '../../hooks/useActiveBoard';
 import { DiceManager, DiceObject } from './DiceLibrary';
 import { useCreateDice } from './hooks/useCreateDice';
-
-const boardWidth = 23;
-const boardHeight = 15;
 
 export function DiceSix() {
     const { scene } = useThree();
     const diceRefs = useRef<DiceObject[]>([]);
     const rollDice = useCreateDice();
+    const { width: boardWidth, height: boardHeight } = useActiveBoard();
+
     const diceToRoll = useActiveDiceStore(state => state.dice);
     const setDice = useActiveDiceStore(state => state.setDice);
 
@@ -74,7 +74,7 @@ export function DiceSix() {
         DiceManager.world.gravity.set(0, 0, -9.82 * 2);
         DiceManager.world.broadphase = new CANNON.NaiveBroadphase();
         DiceManager.world.solver.iterations = 16;
-    }, []);
+    }, [ boardHeight, boardWidth ]);
 
     useFrame(() => {
         DiceManager.world.step(1.0 / 60.0);

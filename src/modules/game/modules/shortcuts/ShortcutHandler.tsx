@@ -1,6 +1,8 @@
+import React from 'react';
 import { useContext, useEffect } from 'react';
-import { ToolContext } from '../modules/toolbox/contexts/ToolContext';
-import { Tool } from '../modules/toolbox/enums/Tool';
+import { ToolContext } from '../toolbox/contexts/ToolContext';
+import { Tool } from '../toolbox/enums/Tool';
+import { ShortcutInformationModal } from './ShortcutInformationModal';
 
 export function ShortcutHandler() {
     const { setTool } = useContext(ToolContext);
@@ -20,7 +22,6 @@ export function ShortcutHandler() {
             }
         };
 
-
         global.addEventListener('keydown', handler);
 
         return () => {
@@ -28,5 +29,5 @@ export function ShortcutHandler() {
         };
     }, [ setTool ]);
 
-    return null;
+    return <ShortcutInformationModal />;
 }

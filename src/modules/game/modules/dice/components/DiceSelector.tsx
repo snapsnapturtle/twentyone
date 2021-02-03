@@ -1,16 +1,17 @@
 import { useStyletron } from 'baseui';
 import { Button } from 'baseui/button';
+import { ArrowRight } from 'baseui/icon';
 import React, { useState } from 'react';
 import { animated, config, useSpring } from 'react-spring';
 import { useActiveDiceStore } from '../../../hooks/useActiveDiceStore';
 import { DiceType } from '../hooks/useCreateDice';
 import { DiceButton } from './DiceButton';
-import { DiceD10Icon } from './DiceD10Icon';
-import { DiceD12Icon } from './DiceD12Icon';
-import { DiceD20Icon } from './DiceD20Icon';
-import { DiceD4Icon } from './DiceD4Icon';
-import { DiceD6Icon } from './DiceD6Icon';
-import { DiceD8Icon } from './DiceD8Icon';
+import { DiceD10Icon } from './icons/DiceD10Icon';
+import { DiceD12Icon } from './icons/DiceD12Icon';
+import { DiceD20Icon } from './icons/DiceD20Icon';
+import { DiceD4Icon } from './icons/DiceD4Icon';
+import { DiceD6Icon } from './icons/DiceD6Icon';
+import { DiceD8Icon } from './icons/DiceD8Icon';
 
 export function DiceSelector() {
     const [ css, theme ] = useStyletron();
@@ -23,9 +24,7 @@ export function DiceSelector() {
         config: config.stiff
     }));
 
-    const handleDiceAdd = (diceType: DiceType) => (e: React.MouseEvent) => {
-        e.preventDefault();
-        console.log(e.button);
+    const handleDiceAdd = (diceType: DiceType) => () => {
         setSelectedDice(current => current.concat([ diceType ]));
         set({ bottom: 7, opacity: 1 });
     };
@@ -61,7 +60,7 @@ export function DiceSelector() {
                 }}
             >
                 <Button kind="secondary" onClick={handleClearClick} overrides={{ Root: { style: { marginRight: theme.sizing.scale400} } }}>
-                    Clear
+                    Cancel
                 </Button>
                 <Button onClick={handleRollClick}>Roll Dice</Button>
             </animated.div>

@@ -1,19 +1,14 @@
 import React from 'react';
 import { useUpdate } from 'react-three-fiber';
 import { BufferGeometry, Color, Vector3 } from 'three';
-import { useColors } from '../hooks/useColors';
+import { useActiveBoard } from '../../../hooks/useActiveBoard';
 
-interface SquareGridMapProps {
-    width: number;
-    height: number;
-}
+export function SquareGridMap() {
+    const { width, height, gridLineColor } = useActiveBoard();
 
-export function SquareGridMap({ width, height }: SquareGridMapProps) {
-    const colors = useColors();
     const halfHeight = Math.ceil(height / 2) - .5;
     const halfWidth = Math.ceil(width / 2) - .5;
 
-    // const texture: any = useTexture('/assets/map.png');
     const points: Vector3[] = [];
 
     for (let i = -halfHeight; i <= halfHeight; i++) {
@@ -28,23 +23,12 @@ export function SquareGridMap({ width, height }: SquareGridMapProps) {
 
     const geometryRef = useUpdate<BufferGeometry>(geometry => {
         geometry.setFromPoints(points);
-    }, []);
+    }, [ points ]);
 
     return (
-        <>
-            <mesh position={[ 0, 0, -1 ]} receiveShadow={true}>
-                <planeBufferGeometry args={[ width + 2, height + 2 ]} attach="geometry" />
-                <shadowMaterial attach="material" />
-            </mesh>
-            <mesh position={[ 0, 0, -1 ]}>
-                <planeBufferGeometry args={[ width + 2, height + 2 ]} attach="geometry" />
-                {/*<meshBasicMaterial map={texture} attach="material" />*/}
-                <meshBasicMaterial color={new Color(colors.backgroundPrimary)} attach="material" />
-            </mesh>
-            <lineSegments position={[ 0, 0, -1 ]}>
-                <bufferGeometry attach="geometry" ref={geometryRef} />
-                <meshBasicMaterial color={new Color(colors.contentStateDisabled)} attach="material" />
-            </lineSegments>
-        </>
+        <lineSegments position={[ 0, 0, -1 ]}>
+            <bufferGeometry attach="geometry" ref={geometryRef} />
+            <meshBasicMaterial color={new Color(gridLineColor)} attach="material" />
+        </lineSegments>
     );
 }

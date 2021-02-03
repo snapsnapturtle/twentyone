@@ -3,12 +3,17 @@ import React, { createRef, Suspense, useEffect, useState } from 'react';
 import { Canvas } from 'react-three-fiber';
 import { UserPreferencesContext } from '../../../../preferences/contexts/UserPreferencesContext';
 import { useUserPreferences } from '../../../../preferences/hooks/useUserPreferences';
+import { BoardPreferencesForm } from '../../../components/BoardPreferencesForm';
+import { SessionContext } from '../../../context/SessionContext';
+import { useActiveBoard } from '../../../hooks/useActiveBoard';
 import { useConnection } from '../../../hooks/useConnection';
+import { GridType } from '../../../types/BoardPreferences';
 import { DiceSix } from '../../dice/DiceSix';
 import { ToolContext } from '../../toolbox/contexts/ToolContext';
 import { Tool } from '../../toolbox/enums/Tool';
 import { useActiveTool } from '../../toolbox/hooks/useActiveTool';
 import { ColorsContext } from '../context/ColorsContext';
+import { BoardBackground } from './BoardBackground';
 import { CanvasLoading } from './CanvasLoading';
 import { CircleRuler } from './CircleRuler';
 import { Lighting } from './Lighting';
@@ -20,10 +25,11 @@ import { Token } from './Token';
 export const Board = () => {
     const tool = useActiveTool();
     const userPreferences = useUserPreferences();
-    const ContextBridge = useContextBridge(ToolContext, UserPreferencesContext, ColorsContext);
+    const ContextBridge = useContextBridge(ToolContext, UserPreferencesContext, ColorsContext, SessionContext);
     const connection = useConnection();
     const canvasRef = createRef<HTMLDivElement>();
     const [ tokens, setTokens ] = useState<{ id: number, x: number, y: number }[]>();
+    const { gridType } = useActiveBoard();
 
     useEffect(() => {
         connection.on('all_tokens_changed', (res: []) => {
@@ -49,7 +55,8 @@ export const Board = () => {
             >
                 <ContextBridge>
                     <Suspense fallback={<CanvasLoading />}>
-                        <SquareGridMap width={23} height={15} />
+                        <BoardBackground />
+                        {gridType === GridType.SQUARE && <SquareGridMap />}
                         <Lighting />
                         <MoveControls />
                         <DiceSix />
@@ -61,6 +68,7 @@ export const Board = () => {
                     </Suspense>
                 </ContextBridge>
             </Canvas>
+            {/*<BoardPreferencesForm />*/}
         </div>
     );
 };
