@@ -4,29 +4,22 @@ import { FormControl } from 'baseui/form-control';
 import { Input } from 'baseui/input';
 import { HeadingMedium, ParagraphMedium } from 'baseui/typography';
 import React, { FormEvent, useState } from 'react';
-import { Redirect, useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Navigation } from '../../../components/Navigation';
 import { axiosInstance } from '../../../shared/axios';
 
-export function JoinSessionPage() {
+export function JoinCampaignPage() {
     const history = useHistory();
-    const { params } = useRouteMatch<{ sessionKey?: string }>();
-    const [ sessionKeyText, setSessionKeyText ] = useState<string>('');
+    const [ campaignIdText, setCampaignIdText ] = useState<string>('');
     const [ loading, setLoading ] = useState(false);
     const [ error, setError ] = useState(false);
-
-    if (params.sessionKey) {
-        console.info('Automatic redirect for session' + params.sessionKey);
-        return <Redirect to={`/session/${params.sessionKey}`} />;
-    }
 
     const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
 
-        axiosInstance.get(`/v1/sessions/${sessionKeyText}`).then((r) => {
-            console.log('success', r.data)
-            history.push(`/session/${sessionKeyText}`);
+        axiosInstance.get(`/v1/campaigns/${campaignIdText}`).then((r) => {
+            history.push(`/campaign/${campaignIdText}`);
         }).catch(() => {
             setError(true);
         }).finally(() => {
@@ -41,17 +34,17 @@ export function JoinSessionPage() {
             <Card overrides={{ Root: { style: { maxWidth: '30em', marginLeft: '50%', marginTop: '10%', transform: 'translateX(-50%)' } } }}>
                 <form onSubmit={handleFormSubmit}>
                     <StyledBody>
-                        <HeadingMedium>Join Session</HeadingMedium>
-                        <ParagraphMedium>Enter the session id in the field below and click "Join" to get to the game.</ParagraphMedium>
-                        <FormControl error={error ? 'Session does not exist' : null}>
+                        <HeadingMedium>Join Campaign</HeadingMedium>
+                        <ParagraphMedium>Enter the campaign id in the field below and click "Join" to get to the game.</ParagraphMedium>
+                        <FormControl error={error ? 'Campaign does not exist' : null}>
                             <Input
-                                placeholder="Session ID"
-                                value={sessionKeyText}
+                                placeholder="Campaign ID"
+                                value={campaignIdText}
                                 error={error}
                                 required
                                 onChange={(e: any) => {
                                     setError(false);
-                                    setSessionKeyText(e.target.value);
+                                    setCampaignIdText(e.target.value);
                                 }}
                             />
                         </FormControl>

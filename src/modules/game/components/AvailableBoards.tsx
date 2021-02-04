@@ -4,7 +4,7 @@ import { Drawer } from 'baseui/drawer';
 import { ListItem, ListItemLabel } from 'baseui/list';
 import { HeadingMedium, ParagraphMedium } from 'baseui/typography';
 import React, { useContext, useState } from 'react';
-import { SessionContext } from '../context/SessionContext';
+import { CampaignContext } from '../context/CampaignContext';
 import { BoardPreferencesModal } from './BoardPreferencesModal';
 import { SwitchIcon } from './SwitchIcon';
 
@@ -12,7 +12,8 @@ export const AvailableBoards = () => {
     const [ css, theme ] = useStyletron();
     const [ isOpen, setIsOpen ] = useState<boolean>(false);
     const [ boardPreferencesOpen, setBoardPreferencesOpen ] = useState<boolean>(false);
-    const { availableBoards, activeBoard, setActiveBoard } = useContext(SessionContext);
+    const { availableBoards, activeBoard, setActiveBoard } = useContext(CampaignContext);
+
     return (
         <>
             <div
@@ -42,6 +43,7 @@ export const AvailableBoards = () => {
                 <ul className={css({ paddingLeft: 0, paddingRight: 0 })}>
                     {availableBoards.map(it => (
                         <ListItem
+                            key={it.id}
                             endEnhancer={() => (
                                 <Button
                                     size="compact"

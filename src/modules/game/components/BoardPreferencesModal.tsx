@@ -12,36 +12,36 @@ export function BoardPreferencesModal(props: BoardPreferencesModalProps) {
 
     return (
         <>
-        <Modal
-            isOpen={props.isOpen}
-            onClose={props.onClose}
-            unstable_ModalBackdropScroll={true}
-            overrides={{
-                Dialog: {
-                    style: {
-                        display: 'flex',
-                        flexDirection: 'column'
+            <Modal
+                isOpen={props.isOpen}
+                onClose={props.onClose}
+                unstable_ModalBackdropScroll={true}
+                overrides={{
+                    Dialog: {
+                        style: {
+                            display: 'flex',
+                            flexDirection: 'column'
+                        }
                     }
-                }
-            }}
-        >
-            <ModalHeader>Board Preferences</ModalHeader>
-            <ModalBody style={{ flex: '1 1 0' }}>
-                <BoardPreferencesForm />
-            </ModalBody>
-            <ModalFooter>
-                <ModalButton
-                    kind="tertiary"
-                    overrides={{ BaseButton: { style: { float: 'left', clear: 'both' } } }}
-                    onClick={() => setShowConfirmDeleteModal(true)}
-                >
-                    Delete Board
-                </ModalButton>
-                <ModalButton kind="tertiary" onClick={props.onClose}>Cancel</ModalButton>
-                <ModalButton>Save</ModalButton>
-            </ModalFooter>
-        </Modal>
-            <Modal isOpen={showConfirmDeleteModal} onClose={() => setShowConfirmDeleteModal(false)}>
+                }}
+            >
+                <ModalHeader>Board Preferences</ModalHeader>
+                <ModalBody style={{ flex: '1 1 0' }}>
+                    <BoardPreferencesForm />
+                </ModalBody>
+                <ModalFooter>
+                    <ModalButton
+                        kind="tertiary"
+                        overrides={{ BaseButton: { style: { float: 'left', clear: 'both' } } }}
+                        onClick={() => setShowConfirmDeleteModal(true)}
+                    >
+                        Delete Board
+                    </ModalButton>
+                    <ModalButton kind="tertiary" onClick={props.onClose}>Cancel</ModalButton>
+                    <ModalButton>Save</ModalButton>
+                </ModalFooter>
+            </Modal>
+            <Modal isOpen={showConfirmDeleteModal} onClose={() => setShowConfirmDeleteModal(false)} unstable_ModalBackdropScroll={true}>
                 <ModalHeader>Confirm</ModalHeader>
                 <ModalBody>
                     Do you want to delete the board?
@@ -52,6 +52,6 @@ export function BoardPreferencesModal(props: BoardPreferencesModalProps) {
                 </ModalFooter>
 
             </Modal>
-            </>
+        </>
     );
 }

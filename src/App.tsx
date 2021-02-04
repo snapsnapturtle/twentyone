@@ -6,7 +6,7 @@ import { Client as Styletron } from 'styletron-engine-atomic';
 import { Provider as StyletronProvider } from 'styletron-react';
 import { DashboardPage } from './modules/dashboard/pages/DashboardPage';
 import { GamePage } from './modules/game/pages/GamePage';
-import { JoinSessionPage } from './modules/join-session/pages/JoinSessionPage';
+import { JoinCampaignPage } from './modules/join-campaign/pages/JoinCampaignPage';
 import { UserPreferencesContextProvider } from './modules/preferences/contexts/UserPreferencesContext';
 import { useUserPreferences } from './modules/preferences/hooks/useUserPreferences';
 import { ProfilePage } from './modules/profile/pages/ProfilePage';
@@ -44,9 +44,8 @@ function App() {
                             <Main>
                                 <Switch>
                                     <Route exact path="/" component={DashboardPage} />
-                                    <Route exact path="/session/:sessionKey" component={GamePage} />
-                                    <Route exact path="/join-session" component={JoinSessionPage} />
-                                    <Route exact path="/join-session/:sessionKey" component={JoinSessionPage} />
+                                    <Route exact path="/campaign/:campaignId" component={GamePage} />
+                                    <Route exact path="/join-campaign" component={JoinCampaignPage} />
                                     <Route exact path="/profile" component={ProfilePage} />
                                 </Switch>
                             </Main>

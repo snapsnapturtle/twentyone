@@ -3,6 +3,6 @@ import { Redirect } from 'react-router-dom';
 
 export function DashboardPage() {
     return (
-        <Redirect to="/join-session" />
+        <Redirect to="/join-campaign" />
     );
 }

@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import { SessionContext } from '../context/SessionContext';
+import { CampaignContext } from '../context/CampaignContext';
 
 export function useActiveBoard() {
-    const { activeBoard } = useContext(SessionContext);
+    const { activeBoard } = useContext(CampaignContext);
 
     return activeBoard;
 }

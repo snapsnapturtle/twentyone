@@ -28,8 +28,6 @@ export function Lighting() {
     useFrame(() => {
         lightRef.current.position.copy(camera.position).add(new Vector3(15, 15, 0));
         lightRef.current.position.z = 150 - camera.zoom;
-
-        console.log(camera.zoom);
     });
 
     return (

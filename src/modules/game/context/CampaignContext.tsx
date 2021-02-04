@@ -1,7 +1,7 @@
 import { Block } from 'baseui/block';
 import { StyledSpinnerNext } from 'baseui/spinner';
 import React, { createContext, FC, useEffect, useState } from 'react';
-import { getSessionInformation } from '../api/getSessionInformation';
+import { getCampaignInformation } from '../api/getCampaignInformation';
 
 interface Board {
     id: number;
@@ -12,20 +12,20 @@ interface Board {
     gridLineColor?: string;
 }
 
-interface ISessionContext {
-    session: {
-        id: number;
-        key: string;
-    };
+interface CampaignInformation {
+    id: number;
+}
+
+interface ICampaignContext {
+    campaign: CampaignInformation;
     activeBoard: Board;
     setActiveBoard: (board: Board) => void;
     availableBoards: Board[];
 }
 
-const SessionContext = createContext<ISessionContext>({
-    session: {
+const CampaignContext = createContext<ICampaignContext>({
+    campaign: {
         id: 0,
-        key: ''
     },
     activeBoard: {
         id: 0,
@@ -34,12 +34,13 @@ const SessionContext = createContext<ISessionContext>({
         height: 0,
         gridType: 'NONE'
     },
-    setActiveBoard: () => {},
+    setActiveBoard: () => {
+    },
     availableBoards: []
 });
 
-const SessionContextProvider: FC<{ sessionKey: string }> = ({ sessionKey, ...props }) => {
-    const [ sessionInformation, setSessionInformation ] = useState<{ id: number, key: string }>();
+const CampaignContextProvider: FC<{ campaignId: number }> = ({ campaignId, ...props }) => {
+    const [ campaignInformation, setCampaignInformation ] = useState<CampaignInformation>();
     const [ activeBoardId, setActiveBoardId ] = useState<number>();
     const [ boards, setBoards ] = useState<Board[]>();
 
@@ -47,10 +48,9 @@ const SessionContextProvider: FC<{ sessionKey: string }> = ({ sessionKey, ...pro
     const [ loading, setLoading ] = useState<boolean>(true);
 
     useEffect(() => {
-        getSessionInformation(sessionKey).then(response => {
-            setSessionInformation({
-                id: response.data.id,
-                key: response.data.sessionKey
+        getCampaignInformation(campaignId).then(response => {
+            setCampaignInformation({
+                id: response.data.id
             });
 
             setBoards(response.data.boards);
@@ -63,7 +63,7 @@ const SessionContextProvider: FC<{ sessionKey: string }> = ({ sessionKey, ...pro
         }).finally(() => {
             setLoading(false);
         });
-    }, [ sessionKey ]);
+    }, [ campaignId ]);
 
     if (loading) {
         return (
@@ -88,11 +88,11 @@ const SessionContextProvider: FC<{ sessionKey: string }> = ({ sessionKey, ...pro
         return <h1>Error :(</h1>;
     }
 
-    const contextValue: ISessionContext = {
-        session: sessionInformation!!,
+    const contextValue: ICampaignContext = {
+        campaign: campaignInformation!!,
         availableBoards: boards!!,
         setActiveBoard: (board: Board) => {
-            setActiveBoardId(board.id)
+            setActiveBoardId(board.id);
         },
         activeBoard: {
             id: 0,
@@ -107,12 +107,10 @@ const SessionContextProvider: FC<{ sessionKey: string }> = ({ sessionKey, ...pro
         contextValue.activeBoard = boards?.find(it => it.id === activeBoardId)!!;
     }
 
-    console.log(contextValue.activeBoard)
-
-    return <SessionContext.Provider value={contextValue} {...props} />;
+    return <CampaignContext.Provider value={contextValue} {...props} />;
 };
 
 export {
-    SessionContext,
-    SessionContextProvider
+    CampaignContext,
+    CampaignContextProvider
 };

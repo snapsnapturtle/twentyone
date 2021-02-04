@@ -3,7 +3,7 @@ import React, { createRef, Suspense, useEffect, useState } from 'react';
 import { Canvas } from 'react-three-fiber';
 import { UserPreferencesContext } from '../../../../preferences/contexts/UserPreferencesContext';
 import { useUserPreferences } from '../../../../preferences/hooks/useUserPreferences';
-import { SessionContext } from '../../../context/SessionContext';
+import { CampaignContext } from '../../../context/CampaignContext';
 import { useActiveBoard } from '../../../hooks/useActiveBoard';
 import { useConnection } from '../../../hooks/useConnection';
 import { GridType } from '../../../types/BoardPreferences';
@@ -24,7 +24,7 @@ import { Token } from './Token';
 export const Board = () => {
     const tool = useActiveTool();
     const userPreferences = useUserPreferences();
-    const ContextBridge = useContextBridge(ToolContext, UserPreferencesContext, ColorsContext, SessionContext);
+    const ContextBridge = useContextBridge(ToolContext, UserPreferencesContext, ColorsContext, CampaignContext);
     const connection = useConnection();
     const canvasRef = createRef<HTMLDivElement>();
     const [ tokens, setTokens ] = useState<{ id: number, x: number, y: number }[]>();
@@ -35,9 +35,13 @@ export const Board = () => {
             setTokens(res);
         });
 
-        connection.emit('request_session_init');
+        const t = setTimeout(() => {
+            connection.emit('request_session_init');
+
+        }, 100);
 
         return () => {
+            clearTimeout(t);
             connection.off('all_tokens_changed');
         };
     }, [ connection ]);

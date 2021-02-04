@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { AvailableBoards } from '../components/AvailableBoards';
 import { SocketConnectionStatus } from '../components/SocketConnectionStatus';
-import { SessionContextProvider } from '../context/SessionContext';
+import { CampaignContextProvider } from '../context/CampaignContext';
 import { Board } from '../modules/board/components/Board';
 import { ColorsContextProvider } from '../modules/board/context/ColorsContext';
 import { DiceSelector } from '../modules/dice/components/DiceSelector';
@@ -11,10 +11,10 @@ import { Toolbox } from '../modules/toolbox/components/Toolbox';
 import { ToolContextProvider } from '../modules/toolbox/contexts/ToolContext';
 
 export function GamePage() {
-    const { sessionKey } = useParams<{ sessionKey: string }>();
+    const { campaignId } = useParams<{ campaignId: string }>();
 
     return (
-        <SessionContextProvider sessionKey={sessionKey}>
+        <CampaignContextProvider campaignId={Number.parseInt(campaignId)}>
             <SocketConnectionStatus />
             <ToolContextProvider>
                 <ShortcutHandler />
@@ -27,6 +27,6 @@ export function GamePage() {
                 <Toolbox />
                 <AvailableBoards />
             </ToolContextProvider>
-        </SessionContextProvider>
+        </CampaignContextProvider>
     );
 }

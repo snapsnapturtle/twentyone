@@ -1,9 +1,8 @@
 import { AxiosPromise } from 'axios';
 import { axiosInstance } from '../../../shared/axios';
 
-interface SessionResponse {
+interface CampaignResponse {
     id: number;
-    sessionKey: string;
     boards: {
         id: number;
         name: string;
@@ -14,6 +13,6 @@ interface SessionResponse {
     }[]
 }
 
-export function getSessionInformation(sessionKey: string): AxiosPromise<SessionResponse> {
-    return axiosInstance.get<SessionResponse>(`/v1/sessions/${sessionKey}`);
+export function getCampaignInformation(id: number): AxiosPromise<CampaignResponse> {
+    return axiosInstance.get<CampaignResponse>(`/v1/campaigns/${id}`);
 }

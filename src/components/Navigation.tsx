@@ -26,14 +26,14 @@ export function Navigation() {
                     </Link>
                 </NavigationItem>
                 <NavigationItem>
-                    <Link to="/join-session">
+                    <Link to="/join-campaign">
                         <StyledLink>
-                            Join Session
+                            Join Campaign
                         </StyledLink>
                     </Link>
                 </NavigationItem>
                 <NavigationItem>
-                    <Button kind="secondary" disabled>New Game</Button>
+                    <Button kind="secondary" disabled>New Campaign</Button>
                 </NavigationItem>
             </NavigationList>
             <NavigationList $align={ALIGN.right}/>

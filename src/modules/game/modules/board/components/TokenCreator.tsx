@@ -6,12 +6,12 @@ import { Input } from 'baseui/input';
 import { Modal, ModalBody, ModalButton, ModalFooter, ModalHeader } from 'baseui/modal';
 import React, { useState } from 'react';
 import { axiosInstance } from '../../../../../shared/axios';
-import { useSessionKey } from '../../../hooks/useSessionKey';
+import { useCampaignId } from '../../../hooks/useCampaignId';
 
 export function TokenCreator() {
     const [ showModal, setShowModal ] = useState<boolean>(false);
     const [ loading, setLoading ] = useState<boolean>(false);
-    const sessionKey = useSessionKey()
+    const campaignId = useCampaignId();
 
     const handleCreate = (e: React.FormEvent) => {
         e.preventDefault();
@@ -22,7 +22,7 @@ export function TokenCreator() {
 
         setLoading(true);
 
-        axiosInstance.post(`/v1/sessions/${sessionKey}/tokens`, {
+        axiosInstance.post(`/v1/campaigns/${campaignId}/tokens`, {
             name: 'goblin-1',
             position: {
                 x: 0,
@@ -41,7 +41,7 @@ export function TokenCreator() {
             <Button size={SIZE.compact} kind="secondary" onClick={() => setShowModal(true)}>
                 <Plus size={20} />
             </Button>
-            <Modal onClose={() => setShowModal(false)} isOpen={showModal}>
+            <Modal onClose={() => setShowModal(false)} isOpen={showModal} unstable_ModalBackdropScroll={true}>
                 <form onSubmit={handleCreate}>
                     <ModalHeader>Create a new Token</ModalHeader>
                     <ModalBody>

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { useSessionKey } from './useSessionKey';
+import { useCampaignId } from './useCampaignId';
 
 let connection: Socket;
 
@@ -18,11 +18,11 @@ const initiateConnection = (room: string) => {
 };
 
 export function useConnection(): Socket {
-    const sessionKey = useSessionKey();
+    const campaignId = useCampaignId();
 
     return useMemo(() => {
-        initiateConnection(sessionKey);
+        initiateConnection(campaignId.toString());
 
         return connection;
-    }, [ sessionKey ]);
+    }, [ campaignId ]);
 }
