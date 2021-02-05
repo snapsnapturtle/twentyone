@@ -5,17 +5,16 @@ import { Input } from 'baseui/input';
 import { OptionsT, Select } from 'baseui/select';
 import React, { FormEvent, useState } from 'react';
 import { ColorPickerButton } from '../../../shared/components/ColorPickerButton';
-import { useActiveBoard } from '../hooks/useActiveBoard';
-import { GridType } from '../types/BoardPreferences';
+import { Board } from '../context/CampaignContext';
 
-export function BoardPreferencesForm() {
-    const boardPreferences = useActiveBoard();
+interface BoardPreferencesFormProps {
+    board: Omit<Board, 'id'>;
+    onChange: (board: Omit<Board, 'id'>) => void
+}
 
-    const [ name, setName ] = useState<string>(boardPreferences.name);
-    const [ boardWidth, setBoardWidth ] = useState<string>(boardPreferences.width.toString());
-    const [ boardHeight, setBoardHeight ] = useState<string>(boardPreferences.height.toString());
-    const [ gridType, setGridType ] = useState<'NONE' | 'SQUARE'>(boardPreferences.gridType);
-    const [ gridLineColor, setGridLineColor ] = useState<string | undefined>(boardPreferences.gridLineColor);
+export function BoardPreferencesForm({ board, onChange }: BoardPreferencesFormProps) {
+    const [ gridType, setGridType ] = useState<'NONE' | 'SQUARE'>(board.gridType);
+    const [ gridLineColor, setGridLineColor ] = useState<string | undefined>(board.gridLineColor);
 
     const gridOptions: OptionsT = [
         {
@@ -28,26 +27,24 @@ export function BoardPreferencesForm() {
         }
     ];
 
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
-
-        alert('saving board preferences');
+    const handleBoardValueChange = (e: FormEvent<HTMLInputElement>) => {
+        onChange({ ...board, [ e.currentTarget.name ]: e.currentTarget.value });
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <div>
             <FormControl label="Name">
-                <Input name="name" value={name} onChange={(e: any) => setName(e.target.value)} />
+                <Input name="name" value={board.name} onChange={handleBoardValueChange} />
             </FormControl>
             <Block display="grid" gridTemplateColumns="auto auto" gridColumnGap="1em">
                 <div>
                     <FormControl label="Width">
-                        <Input value={boardWidth} onChange={(e: any) => setBoardWidth(e.target.value)} />
+                        <Input name="width" value={board.width} onChange={handleBoardValueChange} />
                     </FormControl>
                 </div>
                 <div>
                     <FormControl label="Height">
-                        <Input value={boardHeight} onChange={(e: any) => setBoardHeight(e.target.value)} />
+                        <Input name="height" value={board.height} onChange={handleBoardValueChange} />
                     </FormControl>
                 </div>
             </Block>
@@ -55,7 +52,7 @@ export function BoardPreferencesForm() {
             <Accordion>
                 <Panel title="Grid">
                     <FormControl
-                        label="Grid" caption={gridType === GridType.NONE ? 'Disabling the grid will also disable any grid snapping effects, since' +
+                        label="Grid" caption={gridType === 'NONE' ? 'Disabling the grid will also disable any grid snapping effects, since' +
                         ' there\'s nothing for the objects to snap to.' : null}
                     >
                         <Select
@@ -67,7 +64,7 @@ export function BoardPreferencesForm() {
                             searchable={false}
                         />
                     </FormControl>
-                    {gridType !== GridType.NONE && <div>
+                    {gridType !== 'NONE' && <div>
                         <FormControl label="Line color">
                             <ColorPickerButton color={gridLineColor || '#444444'} onColorChange={c => setGridLineColor(c)}>
                                 Change Color
@@ -76,6 +73,6 @@ export function BoardPreferencesForm() {
                     </div>}
                 </Panel>
             </Accordion>
-        </form>
+        </div>
     );
 }

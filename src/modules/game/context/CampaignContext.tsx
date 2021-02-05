@@ -1,9 +1,11 @@
 import { Block } from 'baseui/block';
 import { StyledSpinnerNext } from 'baseui/spinner';
+import { HeadingMedium } from 'baseui/typography';
 import React, { createContext, FC, useEffect, useState } from 'react';
 import { getCampaignInformation } from '../api/getCampaignInformation';
+import { useConnection } from '../hooks/useConnection';
 
-interface Board {
+export interface Board {
     id: number;
     name: string;
     width: number;
@@ -25,7 +27,7 @@ interface ICampaignContext {
 
 const CampaignContext = createContext<ICampaignContext>({
     campaign: {
-        id: 0,
+        id: 0
     },
     activeBoard: {
         id: 0,
@@ -43,6 +45,7 @@ const CampaignContextProvider: FC<{ campaignId: number }> = ({ campaignId, ...pr
     const [ campaignInformation, setCampaignInformation ] = useState<CampaignInformation>();
     const [ activeBoardId, setActiveBoardId ] = useState<number>();
     const [ boards, setBoards ] = useState<Board[]>();
+    const connection = useConnection();
 
     const [ error, setError ] = useState<boolean>(false);
     const [ loading, setLoading ] = useState<boolean>(true);
@@ -65,6 +68,28 @@ const CampaignContextProvider: FC<{ campaignId: number }> = ({ campaignId, ...pr
         });
     }, [ campaignId ]);
 
+    useEffect(() => {
+        connection.on('update_board', (updatedBoard: Board) => {
+            const i = boards?.findIndex(b => b.id === updatedBoard.id);
+
+            if (i !== undefined && i >= 0) {
+                const newBoards = boards?.map((existingBoard, index) => {
+                    if (index === i) {
+                        return updatedBoard;
+                    }
+
+                    return existingBoard;
+                });
+
+                setBoards(newBoards);
+            }
+        });
+
+        return () => {
+            connection.off('update_board');
+        };
+    }, [ connection, campaignId, boards ]);
+
     if (loading) {
         return (
             <Block
@@ -85,7 +110,7 @@ const CampaignContextProvider: FC<{ campaignId: number }> = ({ campaignId, ...pr
     }
 
     if (error) {
-        return <h1>Error :(</h1>;
+        return <HeadingMedium>Something went wrong</HeadingMedium>;
     }
 
     const contextValue: ICampaignContext = {

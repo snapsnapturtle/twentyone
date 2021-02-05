@@ -43,7 +43,7 @@ export const AvailableBoards = () => {
                 <ul className={css({ paddingLeft: 0, paddingRight: 0 })}>
                     {availableBoards.map(it => (
                         <ListItem
-                            key={it.id}
+                            key={it.id + it.name}
                             endEnhancer={() => (
                                 <Button
                                     size="compact"

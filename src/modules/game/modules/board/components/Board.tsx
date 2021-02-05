@@ -4,9 +4,9 @@ import { Canvas } from 'react-three-fiber';
 import { UserPreferencesContext } from '../../../../preferences/contexts/UserPreferencesContext';
 import { useUserPreferences } from '../../../../preferences/hooks/useUserPreferences';
 import { CampaignContext } from '../../../context/CampaignContext';
+import { ConnectionContext } from '../../../context/ConnectionContext';
 import { useActiveBoard } from '../../../hooks/useActiveBoard';
 import { useConnection } from '../../../hooks/useConnection';
-import { GridType } from '../../../types/BoardPreferences';
 import { DiceSix } from '../../dice/DiceSix';
 import { ToolContext } from '../../toolbox/contexts/ToolContext';
 import { Tool } from '../../toolbox/enums/Tool';
@@ -24,7 +24,7 @@ import { Token } from './Token';
 export const Board = () => {
     const tool = useActiveTool();
     const userPreferences = useUserPreferences();
-    const ContextBridge = useContextBridge(ToolContext, UserPreferencesContext, ColorsContext, CampaignContext);
+    const ContextBridge = useContextBridge(ToolContext, UserPreferencesContext, ColorsContext, CampaignContext, ConnectionContext);
     const connection = useConnection();
     const canvasRef = createRef<HTMLDivElement>();
     const [ tokens, setTokens ] = useState<{ id: number, x: number, y: number }[]>();
@@ -59,7 +59,7 @@ export const Board = () => {
                 <ContextBridge>
                     <Suspense fallback={<CanvasLoading />}>
                         <BoardBackground />
-                        {gridType === GridType.SQUARE && <SquareGridMap />}
+                        {gridType === 'SQUARE' && <SquareGridMap />}
                         <Lighting />
                         <MoveControls />
                         <DiceSix />
