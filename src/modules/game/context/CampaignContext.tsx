@@ -85,8 +85,15 @@ const CampaignContextProvider: FC<{ campaignId: number }> = ({ campaignId, ...pr
             }
         });
 
+        connection.on('delete_board', ({boardId: deletedBoardId}: {boardId: number}) => {
+            const newBoards = boards?.filter(it => it.id !== deletedBoardId);
+            setBoards(newBoards);
+            setActiveBoardId((newBoards || [])[0]?.id)
+        });
+
         return () => {
             connection.off('update_board');
+            connection.off('delete_board')
         };
     }, [ connection, campaignId, boards ]);
 
@@ -129,7 +136,12 @@ const CampaignContextProvider: FC<{ campaignId: number }> = ({ campaignId, ...pr
     };
 
     if (activeBoardId) {
-        contextValue.activeBoard = boards?.find(it => it.id === activeBoardId)!!;
+        const activeBoard = boards?.find(it => it.id === activeBoardId);
+        if (activeBoard) {
+            contextValue.activeBoard = activeBoard;
+        } else {
+            contextValue.activeBoard = boards?.find(() => true)!!;
+        }
     }
 
     return <CampaignContext.Provider value={contextValue} {...props} />;

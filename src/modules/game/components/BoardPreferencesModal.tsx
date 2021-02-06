@@ -15,6 +15,7 @@ export function BoardPreferencesModal(props: BoardPreferencesModalProps) {
     const [ showConfirmDeleteModal, setShowConfirmDeleteModal ] = useState<boolean>(false);
     const [ boardPreferences, setChangedBoard ] = useState<Omit<Board, 'id'>>(activeBoard);
     const [ loadingSave, setLoadingSave ] = useState<boolean>(false);
+    const [loadingDelete, setLoadingDelete] = useState<boolean>(false);
 
     const handleBoardPreferencesChange = (b: Omit<Board, 'id'>) => {
         setChangedBoard(b);
@@ -37,7 +38,18 @@ export function BoardPreferencesModal(props: BoardPreferencesModalProps) {
     };
 
     const handleDeleteBoard = () => {
-        alert('delete board!');
+        if(loadingDelete) {
+            return;
+        }
+
+        setLoadingDelete(true);
+
+        axiosInstance.delete(`/v1/boards/${activeBoard.id}`).then(() => {
+            setShowConfirmDeleteModal(false);
+            props.onClose()
+        }).finally(() => {
+            setLoadingDelete(false)
+        })
     };
 
     useEffect(() => {
